@@ -1,13 +1,42 @@
-from dash import jupyter_dash
-
-jupyter_dash.default_mode="external"
 """
 USDA Agricultural Production Dashboard
+=======================================
 
-Interactive dashboard visualizing USDA production data (1930-2023)
-for milk, cheese, yogurt, honey, and coffee across US states.
+An interactive Dash application for visualizing USDA agricultural production
+data (1930-2023) across US states for milk, cheese, yogurt, honey, and coffee.
 
+Features:
+---------
+- Interactive line chart showing production trends over time
+- Bar chart displaying top 10 producing states for selected year
+- Filterable data table with CSV export functionality
+- Dark/light theme toggle
+- Multi-select filters for commodities, states, and year range
+
+Data Requirements:
+------------------
+Expects a CSV file at '../SQL/USDA_production_2023.csv' with columns:
+    - State: US state name (uppercase)
+    - Year: Production year (integer)
+    - commodity: Product type (Cheese, Coffee, Honey, Milk, Yogurt)
+    - total_production: Production value in USD
+
+Usage:
+------
+    python app.py
+
+The dashboard will be available at http://localhost:1234
+
+Dependencies:
+-------------
+    - dash, dash-bootstrap-components, dash-ag-grid
+    - dash-bootstrap-templates
+    - pandas, plotly
 """
+
+from dash import jupyter_dash
+
+jupyter_dash.default_mode = "external"
 
 import pandas as pd
 import plotly.express as px
@@ -214,6 +243,11 @@ app.layout = dbc.Container(
 )
 
 
+# =============================================================================
+# CALLBACKS
+# =============================================================================
+
+
 @callback(
     Output("line-chart", "figure"),
     Input("year-slider", "value"),
@@ -221,7 +255,20 @@ app.layout = dbc.Container(
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
 )
 def update_line_chart(year_range, selected_commodities, toggle):
-    """Update line chart based on selected filters."""
+    """
+    Update line chart showing national production trends over time.
+
+    Aggregates production data across all states by commodity and year,
+    displaying trends for selected commodities within the specified year range.
+
+    Args:
+        year_range: List of [start_year, end_year] from the range slider.
+        selected_commodities: List of commodity names to display.
+        toggle: Boolean for theme selection (True=light, False=dark).
+
+    Returns:
+        plotly.graph_objects.Figure: Line chart with markers showing production trends.
+    """
     template = template_theme1 if toggle else template_theme2
 
     if not selected_commodities:
@@ -266,7 +313,21 @@ def update_line_chart(year_range, selected_commodities, toggle):
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
 )
 def update_bar_chart(year_range, selected_commodities, toggle):
-    """Update bar chart showing top 10 states for most recent selected year."""
+    """
+    Update bar chart showing top 10 producing states.
+
+    Displays the top 10 states by production value for the most recent year
+    in the selected range. If the selected year exceeds available data,
+    falls back to the latest year with data.
+
+    Args:
+        year_range: List of [start_year, end_year] from the range slider.
+        selected_commodities: List of commodity names to include.
+        toggle: Boolean for theme selection (True=light, False=dark).
+
+    Returns:
+        plotly.graph_objects.Figure: Grouped bar chart of top producing states.
+    """
     template = template_theme1 if toggle else template_theme2
 
     if not selected_commodities:
@@ -314,7 +375,20 @@ def update_bar_chart(year_range, selected_commodities, toggle):
     Input("commodity-checklist", "value"),
 )
 def update_table(selected_states, year_range, selected_commodities):
-    """Update data table with filtered data."""
+    """
+    Update the data table with filtered production records.
+
+    Filters the dataset by selected states, year range, and commodities,
+    then sorts results by state (ascending), year (descending), and commodity.
+
+    Args:
+        selected_states: List of state names to include in the table.
+        year_range: List of [start_year, end_year] from the range slider.
+        selected_commodities: List of commodity names to include.
+
+    Returns:
+        list[dict]: List of row dictionaries for the AG Grid table.
+    """
     if not selected_states:
         selected_states = states[:3]
 
@@ -343,7 +417,21 @@ def update_table(selected_states, year_range, selected_commodities):
     prevent_initial_call=True,
 )
 def download_csv(n_clicks, selected_states, year_range, selected_commodities):
-    """Download filtered table data as CSV."""
+    """
+    Generate and download filtered data as a CSV file.
+
+    Triggered by the Download CSV button click. Applies the same filters
+    as the data table and exports the results to a downloadable CSV file.
+
+    Args:
+        n_clicks: Number of times the download button has been clicked.
+        selected_states: List of state names from the dropdown (State).
+        year_range: List of [start_year, end_year] from the slider (State).
+        selected_commodities: List of commodity names from checklist (State).
+
+    Returns:
+        dict: Download data object with CSV content, or None if not triggered.
+    """
     if not n_clicks:
         return None
 
