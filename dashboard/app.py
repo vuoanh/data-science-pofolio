@@ -27,8 +27,9 @@ Usage:
 
 The dashboard will be available at http://localhost:1234
 
-Dependencies:
+Dependencies: 
 -------------
+Read the requirements.txt for full list, key packages include:
     - dash, dash-bootstrap-components, dash-ag-grid
     - dash-bootstrap-templates
     - pandas, plotly
@@ -154,7 +155,7 @@ app.layout = dbc.Container(
             ],
             className="mb-4 p-3 bg-light rounded",
         ),
-        # Line Chart
+        # Line Chart row
         dbc.Row(
             dbc.Col(
                 dbc.Card(
