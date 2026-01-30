@@ -114,7 +114,7 @@ WHERE sl.State_ANSI IN (
 	SELECT State_ANSI 
 	FROM cheese_production
 	WHERE "Year" = 2023 AND Period = "APR"
-	GROUP BY State_ANSI 
+	GROUP BY State_ANSI
 	HAVING SUM(Value) > 100000000
 )
 
@@ -186,3 +186,54 @@ WHERE "Year" IN (
 	GROUP BY "Year" 
 	HAVING SUM(Value) > 1000000
 )
+
+-- 11. Total production of milk, cheese, yogurt, honey, and coffee by state and year (UNION ALL)
+-- Each row shows one commodity type per state/year combination
+SELECT
+    sl.State,
+    mp.Year,
+    'Milk' AS commodity,
+    SUM(mp.Value) AS total_production
+FROM milk_production mp
+JOIN state_lookup sl ON mp.State_ANSI = sl.State_ANSI
+WHERE mp.Period <> 'YEAR'
+GROUP BY sl.State, mp.Year
+UNION ALL
+SELECT
+    sl.State,
+    cp.Year,
+    'Cheese' AS commodity,
+    SUM(cp.Value) AS total_production
+FROM cheese_production cp
+JOIN state_lookup sl ON cp.State_ANSI = sl.State_ANSI
+WHERE cp.Period <> 'YEAR'
+GROUP BY sl.State, cp.Year
+UNION ALL
+SELECT
+    sl.State,
+    yp.Year,
+    'Yogurt' AS commodity,
+    SUM(yp.Value) AS total_production
+FROM yogurt_production yp
+JOIN state_lookup sl ON yp.State_ANSI = sl.State_ANSI
+GROUP BY sl.State, yp.Year
+UNION ALL
+SELECT
+    sl.State,
+    hp.Year,
+    'Honey' AS commodity,
+    SUM(hp.Value) AS total_production
+FROM honey_production hp
+JOIN state_lookup sl ON hp.State_ANSI = sl.State_ANSI
+GROUP BY sl.State, hp.Year
+UNION ALL
+SELECT
+    sl.State,
+    cfp.Year,
+    'Coffee' AS commodity,
+    SUM(cfp.Value) AS total_production
+FROM coffee_production cfp
+JOIN state_lookup sl ON cfp.State_ANSI = sl.State_ANSI
+GROUP BY sl.State, cfp.Year
+ORDER BY State, Year, commodity;
+-- Save the output to a csv file for further analysis and visualization
