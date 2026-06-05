@@ -88,10 +88,6 @@ The SQL modules answer questions such as:
 | [`SQL/05_window_function_analysis.sql`](SQL/05_window_function_analysis.sql) | Uses `LAG`, rolling averages, ranks, percent contribution, and volatility logic. |
 | [`SQL/06_state_commodity_rankings.sql`](SQL/06_state_commodity_rankings.sql) | Ranks states, segments production levels, and flags marketing priorities with `CASE`. |
 | [`SQL/07_dashboard_export.sql`](SQL/07_dashboard_export.sql) | Regenerates the CSV shape consumed by the Dash dashboard. |
-| [`SQL/99_legacy_original_queries.sql`](SQL/99_legacy_original_queries.sql) | Preserves the original exercise-style query script for reference. |
-
-The original script remains available at
-[`SQL/load_and_examine_USDA_data.sql`](SQL/load_and_examine_USDA_data.sql).
 
 ## Documentation
 
