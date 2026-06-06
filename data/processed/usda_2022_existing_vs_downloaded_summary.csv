@@ -1,0 +1,6 @@
+commodity,rows,matched,exact_matches,within_absolute_tolerance,existing_only,downloaded_only,max_abs_difference
+Cheese,14,13,6,6,1,0,663000.0
+Coffee,1,0,0,0,0,1,
+Honey,50,39,0,0,0,11,16912379.0
+Milk,48,24,12,12,0,24,42000000.0
+Yogurt,2,2,1,1,0,0,156700000.0

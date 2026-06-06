@@ -19,7 +19,7 @@ Expects a CSV file at '../SQL/USDA_production_2023.csv' with columns:
     - State: US state name (uppercase)
     - Year: Production year (integer)
     - commodity: Product type (Cheese, Coffee, Honey, Milk, Yogurt)
-    - total_production: Production value in USD
+    - total_production: Annual production in the USDA-reported unit
 
 Usage:
 ------
@@ -292,7 +292,7 @@ def update_line_chart(year_range, selected_commodities, toggle):
         title=title,
         labels={
             "Year": f"<b>Year",
-            "total_production": f"<b>Production (USD)",
+            "total_production": f"<b>Production (USDA unit)",
             "commodity": f"<b>Commodity",
         },
         markers=True,
@@ -357,7 +357,7 @@ def update_bar_chart(year_range, selected_commodities, toggle):
         color="commodity",
         color_discrete_map=COMMODITY_COLORS,
         title=f"<b>Top 10 States - {commodity_label} Production ({selected_year})",
-        labels={"total_production": f"<b>Production (USD)", "State": f"<b>State", "commodity": f"<b>Commodity"},
+        labels={"total_production": f"<b>Production (USDA unit)", "State": f"<b>State", "commodity": f"<b>Commodity"},
         template=template,
     )
     fig.update_layout(

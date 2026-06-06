@@ -36,6 +36,10 @@ analysis, state-level ranking, and dashboard reporting.
 - `GROUP BY` and `HAVING` for state and commodity summaries
 - Data cleaning and validation
 - Long-format analytical modeling with `UNION ALL`
+- Public USDA bulk-data ingestion and source reconciliation
+- Forecasting feature engineering
+- Random Forest and XGBoost model comparison
+- Time-based model validation against simple baselines
 - Python and Dash dashboarding
 
 ## Business Questions Answered
@@ -55,26 +59,55 @@ The SQL modules answer questions such as:
 
 ## Key Findings
 
-- Milk is the largest production category by all-time total in the
-  dashboard-ready annualized data, with roughly 11.7 trillion in total recorded
-  production. Evidence:
-  [`SQL/03_core_analysis_questions.sql`](SQL/03_core_analysis_questions.sql).
-- Latest-year top producers are highly concentrated by commodity: California
-  leads milk in 2023, Wisconsin leads cheese in 2023, North Dakota leads honey
-  in 2022, New York leads yogurt in 2022, and Hawaii leads coffee in 2016.
-  Evidence:
-  [`SQL/06_state_commodity_rankings.sql`](SQL/06_state_commodity_rankings.sql).
-- In April 2023 cheese production, only Wisconsin and California exceeded
-  100 million in production. Evidence:
-  [`SQL/06_state_commodity_rankings.sql`](SQL/06_state_commodity_rankings.sql).
-- Coffee coverage is narrow in this dataset, with records only for Hawaii, so
-  it should not be compared directly with national dairy patterns without
-  calling out the coverage difference. Evidence:
-  [`SQL/01_data_quality_checks.sql`](SQL/01_data_quality_checks.sql).
-- The source tables include blank `State_ANSI` records in milk, cheese, and
-  honey. The cleaned long-format view excludes those rows from state-level
-  analysis because they cannot join to `state_lookup`. Evidence:
-  [`SQL/01_data_quality_checks.sql`](SQL/01_data_quality_checks.sql).
+- Milk is the largest category in the refreshed dashboard-ready data, with
+  roughly 13.5 trillion pounds of recorded state-level production from
+  1930-2023.
+- Latest-year top producers are concentrated by commodity: California leads
+  milk in 2023, Wisconsin leads cheese in 2023, North Dakota leads honey in
+  2023, New York leads yogurt in 2023, and Hawaii leads coffee in 2023.
+- The refreshed 2023 coverage is broader than the original project extract:
+  milk has 48 state rows, honey has 39, cheese has 13, yogurt has 2, and coffee
+  has 1.
+- The USDA bulk refresh updated the dashboard/model dataset from 5,027 rows to
+  7,477 rows. The comparison summary is saved in
+  [`data/processed/usda_1930_2023_existing_vs_bulk_summary.csv`](data/processed/usda_1930_2023_existing_vs_bulk_summary.csv).
+- Units are consistent within commodity: milk, cheese, honey, and yogurt are in
+  pounds, while coffee is reported in pounds on a cherry-basis measure.
+
+## Forecasting Model
+
+The project includes a supervised forecasting layer that predicts next-year
+production for each `State` and `commodity` pair.
+
+Modeling artifacts:
+
+- [`src/build_features.py`](src/build_features.py)
+- [`src/train_model.py`](src/train_model.py)
+- [`src/evaluate_model.py`](src/evaluate_model.py)
+- [`notebooks/01_forecasting_model.ipynb`](notebooks/01_forecasting_model.ipynb)
+- [`docs/forecasting_model_summary.md`](docs/forecasting_model_summary.md)
+
+Models compared:
+
+- previous-year baseline
+- rolling 3-year baseline
+- Random Forest
+- XGBoost
+
+The split is time-based: training target years are `<= 2018`, and test target
+years are `>= 2019`.
+
+| Model | MAE | RMSE | MAPE | R2 |
+|---|---:|---:|---:|---:|
+| Previous-year baseline | 53,547,189 | 145,148,329 | 14.48% | 0.999 |
+| Rolling 3-year baseline | 91,395,960 | 253,803,495 | 14.18% | 0.998 |
+| Random Forest | 97,540,339 | 300,300,565 | 15.88% | 0.997 |
+| XGBoost | 121,203,239 | 579,835,466 | 12.52% | 0.990 |
+
+Result: the previous-year baseline is strongest by MAE and RMSE, while Random
+Forest is the strongest ML benchmark by both MAE and RMSE. This is a useful
+data science finding because annual production is highly persistent, so the ML
+models need to be judged against simple baselines rather than in isolation.
 
 ## SQL Portfolio Files
 
@@ -94,6 +127,7 @@ The SQL modules answer questions such as:
 - [`docs/project_summary.md`](docs/project_summary.md)
 - [`docs/data_dictionary.md`](docs/data_dictionary.md)
 - [`docs/schema.md`](docs/schema.md)
+- [`docs/forecasting_model_summary.md`](docs/forecasting_model_summary.md)
 
 ## Project Structure
 
@@ -104,11 +138,32 @@ data-science-USDA-commodities/
 ├── requirements.txt
 ├── dashboard_light.png
 ├── dashboard_dark.png
+├── data/
+│   ├── raw/
+│   │   └── usda_quickstats_bulk_1930_2023_project_production.csv
+│   └── processed/
+│       ├── forecasting_features.csv
+│       ├── usda_production_1930_2023_complete.csv
+│       ├── usda_production_1930_2023_coverage_summary.csv
+│       ├── usda_1930_2023_existing_vs_bulk_summary.csv
+│       └── usda_bulk_refresh_manifest.json
 ├── docs/
 │   ├── data_dictionary.md
 │   ├── schema.md
 │   ├── schema_diagram.png
-│   └── project_summary.md
+│   ├── project_summary.md
+│   └── forecasting_model_summary.md
+├── models/
+│   ├── model_metrics.json
+│   ├── feature_importance.csv
+│   └── test_predictions.csv
+├── notebooks/
+│   └── 01_forecasting_model.ipynb
+├── src/
+│   ├── build_features.py
+│   ├── evaluate_model.py
+│   ├── refresh_usda_bulk_data.py
+│   └── train_model.py
 ├── SQL/
 │   ├── project-USDA.sqlite
 │   ├── 00_schema.sql
@@ -131,17 +186,18 @@ data-science-USDA-commodities/
 
 ### Data Source
 
-USDA agricultural production statistics spanning 1930-2023.
+USDA NASS QuickStats public bulk exports spanning 1930-2023 for the project
+commodities.
 
-### Raw Data Files
+### Refreshed Data Files
 
 | Dataset | Records | Description |
 |---|---:|---|
-| `milk_production.csv` | 37,638 | Monthly and annual milk production by state |
-| `cheese_production.csv` | 7,488 | Monthly and annual cheese production by state |
-| `honey_production.csv` | 1,559 | Annual honey production by state |
-| `coffee_production.csv` | 71 | Annual coffee production with limited state coverage |
-| `yogurt_production.csv` | 149 | Annual yogurt production by state |
+| `data/raw/usda_quickstats_bulk_1930_2023_project_production.csv` | 7,724 | Filtered QuickStats bulk rows before latest-load-time deduplication |
+| `data/processed/usda_production_1930_2023_complete.csv` | 7,477 | Audit-rich annual state-level production dataset |
+| `SQL/USDA_production_2023.csv` | 7,477 | Dashboard/model-ready canonical production dataset |
+| `data/processed/usda_production_1930_2023_coverage_summary.csv` | 225 | Coverage summary by year and commodity |
+| `data/processed/usda_1930_2023_existing_vs_bulk_summary.csv` | 6 | Original-vs-refreshed comparison summary |
 | `state_lookup.csv` | 50 | State ANSI code reference |
 
 ## Reproduce The Analysis
@@ -157,19 +213,26 @@ sqlite3 SQL/project-USDA.sqlite < SQL/05_window_function_analysis.sql
 sqlite3 SQL/project-USDA.sqlite < SQL/06_state_commodity_rankings.sql
 ```
 
-Regenerate the dashboard CSV from SQLite:
+Refresh the canonical dashboard/model dataset from public USDA bulk exports:
 
 ```bash
-sqlite3 SQL/project-USDA.sqlite
+curl -L -o /private/tmp/qs.animals_products_20260605.txt.gz \
+  https://www.nass.usda.gov/datasets/qs.animals_products_20260605.txt.gz
+curl -L -o /private/tmp/qs.crops_20260605.txt.gz \
+  https://www.nass.usda.gov/datasets/qs.crops_20260605.txt.gz
+
+python src/refresh_usda_bulk_data.py \
+  --bulk-path /private/tmp/qs.animals_products_20260605.txt.gz \
+              /private/tmp/qs.crops_20260605.txt.gz \
+  --start-year 1930 \
+  --end-year 2023
 ```
 
-Then run these commands inside the SQLite shell:
+Build forecasting features and train models:
 
-```sql
-.headers on
-.mode csv
-.once SQL/USDA_production_2023.csv
-.read SQL/07_dashboard_export.sql
+```bash
+python src/build_features.py
+python src/train_model.py
 ```
 
 ## Running The Dashboard
@@ -203,22 +266,21 @@ Open `http://localhost:1234`.
 ## Data Pipeline
 
 ```text
-Raw CSV files
-    -> SQLite source tables
-    -> SQL data quality checks
-    -> SQL cleaning and commodity_production_long view
-    -> SQL dashboard export
-    -> USDA_production_2023.csv
-    -> Dash dashboard
+USDA QuickStats bulk exports
+    -> src/refresh_usda_bulk_data.py
+    -> filtered project raw extract
+    -> audit-rich processed annual dataset
+    -> SQL/USDA_production_2023.csv
+    -> forecasting features, model artifacts, and Dash dashboard
 ```
 
 ## Known Limitations
 
 - USDA source units vary by commodity, so cross-commodity totals should be read
   carefully.
-- Milk and cheese include both monthly and annual records. The dashboard export
-  uses monthly records for annualized totals and excludes `YEAR` records to
-  avoid double counting.
+- The refreshed canonical dataset is annual state-level production. Some legacy
+  SQL exercises still use the original SQLite/raw monthly tables for
+  month-specific questions.
 - Coffee and yogurt have narrower state coverage than milk, cheese, and honey.
-- Some raw source rows contain blank state codes and are excluded from
-  state-level analysis.
+- Rows with blank state codes or USDA `OTHER STATES` rollups are excluded from
+  the refreshed state-level dataset.

@@ -1,0 +1,6 @@
+Year,commodity,rows,states,unit,min_total_production,max_total_production,source
+2022,Cheese,13,13,LB,61779000.0,3520640000.0,USDA NASS QuickStats
+2022,Coffee,1,1,"LB, CHERRY BASIS",23625000.0,23625000.0,USDA NASS QuickStats
+2022,Honey,50,50,LB,14726.0,40873481.0,USDA NASS QuickStats
+2022,Milk,48,48,LB,10000000.0,41800000000.0,USDA NASS QuickStats
+2022,Yogurt,2,2,LB,221139000.0,793256000.0,USDA NASS QuickStats

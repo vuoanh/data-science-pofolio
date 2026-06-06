@@ -5,13 +5,20 @@
 This project analyzes USDA agricultural production data from 1930-2023 using
 SQLite, SQL, Python, and Dash. The portfolio goal is to show an end-to-end
 structured data workflow: schema design, data quality checks, cleaning,
-long-format transformations, analytical SQL, and dashboard-ready reporting.
+long-format transformations, analytical SQL, forecasting models, and
+dashboard-ready reporting.
 
 ## Data Source
 
-The repository includes USDA commodity production extracts for milk, cheese,
-honey, coffee, and yogurt, plus a state lookup table with ANSI state codes. The
-SQLite database is stored at `SQL/project-USDA.sqlite`.
+The canonical dashboard/model dataset is refreshed from USDA NASS QuickStats
+public bulk exports for milk, cheese, honey, coffee, and yogurt. The refresh
+filters exact annual state-level production measures for 1930-2023, excludes
+blank state codes and `OTHER STATES` rollups, and keeps the latest USDA
+`load_time` per state/year/commodity.
+
+The SQLite database at `SQL/project-USDA.sqlite` remains useful for the legacy
+SQL exercises that demonstrate cleaning, CTEs, and window functions on the
+original source tables.
 
 ## SQL Methods Used
 
@@ -26,49 +33,59 @@ SQLite database is stored at `SQL/project-USDA.sqlite`.
 - CTE-based analysis pipelines
 - Window functions for ranking, year-over-year change, rolling averages, and
   percent contribution
+- Forecasting feature engineering
+- Random Forest and XGBoost model comparison
+- Time-based model validation against persistence baselines
 
 ## Key Findings
 
-Finding 1: Milk is the largest production category by all-time total in the
-dashboard-ready annualized data, with roughly 11.7 trillion in total recorded
-production.  
-SQL evidence: [`SQL/03_core_analysis_questions.sql`](../SQL/03_core_analysis_questions.sql)
+Finding 1: Milk is the largest production category in the refreshed
+dashboard-ready annual data, with roughly 13.5 trillion pounds of recorded
+state-level production from 1930-2023.  
+Evidence: [`SQL/USDA_production_2023.csv`](../SQL/USDA_production_2023.csv)
 
 Finding 2: Latest-year top producers are highly concentrated by commodity:
 California leads milk in 2023, Wisconsin leads cheese in 2023, North Dakota
-leads honey in 2022, New York leads yogurt in 2022, and Hawaii leads coffee in
-2016.  
-SQL evidence: [`SQL/06_state_commodity_rankings.sql`](../SQL/06_state_commodity_rankings.sql)
+leads honey in 2023, New York leads yogurt in 2023, and Hawaii leads coffee in
+2023.  
+Evidence: [`data/processed/usda_production_1930_2023_coverage_summary.csv`](../data/processed/usda_production_1930_2023_coverage_summary.csv)
 
-Finding 3: In April 2023 cheese production, only Wisconsin and California
-exceeded 100 million in production.  
-SQL evidence: [`SQL/06_state_commodity_rankings.sql`](../SQL/06_state_commodity_rankings.sql)
+Finding 3: The refreshed 2023 dataset has complete latest-year coverage for
+all five project commodities: 48 milk states, 39 honey states, 13 cheese
+states, 2 yogurt states, and 1 coffee state.  
+Evidence: [`data/processed/usda_production_1930_2023_coverage_summary.csv`](../data/processed/usda_production_1930_2023_coverage_summary.csv)
 
-Finding 4: Coffee coverage is narrow in this dataset, with records only for
-Hawaii. It should not be compared directly with national dairy patterns without
-calling out the coverage difference.  
-SQL evidence: [`SQL/01_data_quality_checks.sql`](../SQL/01_data_quality_checks.sql)
+Finding 4: Coffee coverage remains narrow because the USDA project measure is
+reported only for Hawaii, and it is reported in pounds on a cherry-basis unit.  
+Evidence: [`data/processed/usda_production_1930_2023_complete.csv`](../data/processed/usda_production_1930_2023_complete.csv)
 
-Finding 5: The source tables include blank `State_ANSI` records in milk,
-cheese, and honey. The cleaned long-format view excludes those rows from
-state-level analysis because they cannot join to `state_lookup`.  
-SQL evidence: [`SQL/01_data_quality_checks.sql`](../SQL/01_data_quality_checks.sql)
+Finding 5: The bulk refresh increased the canonical dashboard/model dataset
+from 5,027 rows to 7,477 rows.  
+Evidence: [`data/processed/usda_1930_2023_existing_vs_bulk_summary.csv`](../data/processed/usda_1930_2023_existing_vs_bulk_summary.csv)
+
+Finding 6: The previous-year baseline is strongest by MAE for next-year
+production forecasting, while Random Forest is the best ML benchmark. This
+shows that annual commodity production is highly persistent and that ML models
+must be evaluated against simple baselines.  
+Model evidence: [`docs/forecasting_model_summary.md`](forecasting_model_summary.md)
 
 ## Limitations
 
 - USDA source units can differ by commodity, so cross-commodity totals are best
   interpreted as examples of SQL workflow and relative records within this
   dataset, not unit-equivalent measures.
-- Milk and cheese include monthly and annual records. The dashboard export sums
-  monthly records and excludes annual summary rows to avoid double counting.
+- The refreshed canonical dataset is annual state-level production. Some
+  legacy SQL exercises still use the original SQLite/raw monthly tables for
+  month-specific questions.
 - Coffee and yogurt have much narrower state coverage than milk or honey.
 - The dashboard currently visualizes annual production totals and does not yet
-  include a separate year-over-year tab.
+  include model predictions or a separate year-over-year tab.
 
 ## Next Steps
 
 - Add a dashboard tab for year-over-year change using the logic in
   `SQL/05_window_function_analysis.sql`.
+- Add a dashboard tab comparing actual vs predicted production.
 - Add automated checks that compare the regenerated dashboard CSV against the
   expected app columns.
 - Add a small Makefile or script to rebuild the SQLite database from raw CSVs.

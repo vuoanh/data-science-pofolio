@@ -1,0 +1,115 @@
+State,state_ansi,Year,commodity,total_production,unit,short_desc,load_time,source_file,source
+CALIFORNIA,6,2022,Cheese,2461201000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+IDAHO,16,2022,Cheese,989539000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+ILLINOIS,17,2022,Cheese,68977000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+IOWA,19,2022,Cheese,389996000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+MINNESOTA,27,2022,Cheese,811518000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+NEW JERSEY,34,2022,Cheese,61779000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+NEW MEXICO,35,2022,Cheese,970738000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+NEW YORK,36,2022,Cheese,843648000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+OHIO,39,2022,Cheese,255338000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+PENNSYLVANIA,42,2022,Cheese,450316000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+SOUTH DAKOTA,46,2022,Cheese,533229000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2024-04-26 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+VERMONT,50,2022,Cheese,147811000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+WISCONSIN,55,2022,Cheese,3520640000.0,LB,"CHEESE - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_cheese_2022_annual_production.csv,USDA NASS QuickStats
+HAWAII,15,2022,Coffee,23625000.0,"LB, CHERRY BASIS","COFFEE - PRODUCTION, MEASURED IN LB, CHERRY BASIS",2024-01-03 15:00:00.000,usda_quickstats_coffee_2022_annual_production.csv,USDA NASS QuickStats
+ALABAMA,1,2022,Honey,535501.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+ALASKA,2,2022,Honey,28491.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+ARIZONA,4,2022,Honey,1525002.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+ARKANSAS,5,2022,Honey,1029923.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+CALIFORNIA,6,2022,Honey,28502379.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+COLORADO,8,2022,Honey,1276922.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+CONNECTICUT,9,2022,Honey,240332.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+DELAWARE,10,2022,Honey,14726.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+FLORIDA,12,2022,Honey,14526000.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+GEORGIA,13,2022,Honey,4994913.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+HAWAII,15,2022,Honey,2170545.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+IDAHO,16,2022,Honey,5762856.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+ILLINOIS,17,2022,Honey,803845.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+INDIANA,18,2022,Honey,908140.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+IOWA,19,2022,Honey,2104054.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+KANSAS,20,2022,Honey,845894.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+KENTUCKY,21,2022,Honey,482601.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+LOUISIANA,22,2022,Honey,3989186.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+MAINE,23,2022,Honey,292411.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+MARYLAND,24,2022,Honey,222384.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+MASSACHUSETTS,25,2022,Honey,495799.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+MICHIGAN,26,2022,Honey,6168358.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+MINNESOTA,27,2022,Honey,8865510.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+MISSISSIPPI,28,2022,Honey,3256416.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+MISSOURI,29,2022,Honey,720693.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+MONTANA,30,2022,Honey,8822137.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+NEBRASKA,31,2022,Honey,2400761.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+NEVADA,32,2022,Honey,121005.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+NEW HAMPSHIRE,33,2022,Honey,158122.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+NEW JERSEY,34,2022,Honey,636431.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+NEW MEXICO,35,2022,Honey,342073.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+NEW YORK,36,2022,Honey,2847841.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+NORTH CAROLINA,37,2022,Honey,1026513.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+NORTH DAKOTA,38,2022,Honey,40873481.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+OHIO,39,2022,Honey,1825233.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+OKLAHOMA,40,2022,Honey,234008.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+OREGON,41,2022,Honey,4373045.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+PENNSYLVANIA,42,2022,Honey,1767195.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+RHODE ISLAND,44,2022,Honey,68208.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+SOUTH CAROLINA,45,2022,Honey,541974.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+SOUTH DAKOTA,46,2022,Honey,7799314.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+TENNESSEE,47,2022,Honey,708241.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+TEXAS,48,2022,Honey,8497622.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+UTAH,49,2022,Honey,1027235.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+VERMONT,50,2022,Honey,565491.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+VIRGINIA,51,2022,Honey,500797.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+WASHINGTON,53,2022,Honey,3388225.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+WEST VIRGINIA,54,2022,Honey,365410.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+WISCONSIN,55,2022,Honey,2660990.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+WYOMING,56,2022,Honey,1224763.0,LB,"HONEY - PRODUCTION, MEASURED IN LB",2024-07-02 12:00:00.000,usda_quickstats_honey_2022_annual_production.csv,USDA NASS QuickStats
+ALABAMA,1,2022,Milk,32000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+ARIZONA,4,2022,Milk,4772000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+ARKANSAS,5,2022,Milk,45000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+CALIFORNIA,6,2022,Milk,41800000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+COLORADO,8,2022,Milk,5314000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+CONNECTICUT,9,2022,Milk,430000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+DELAWARE,10,2022,Milk,48100000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+FLORIDA,12,2022,Milk,1927000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+GEORGIA,13,2022,Milk,2028000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+IDAHO,16,2022,Milk,16628000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+ILLINOIS,17,2022,Milk,1714000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+INDIANA,18,2022,Milk,4371000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+IOWA,19,2022,Milk,5770000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+KANSAS,20,2022,Milk,4142000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+KENTUCKY,21,2022,Milk,926000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+LOUISIANA,22,2022,Milk,112000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+MAINE,23,2022,Milk,554000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+MARYLAND,24,2022,Milk,842000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+MASSACHUSETTS,25,2022,Milk,188000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+MICHIGAN,26,2022,Milk,11737000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+MINNESOTA,27,2022,Milk,10472000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+MISSISSIPPI,28,2022,Milk,90000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+MISSOURI,29,2022,Milk,941000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+MONTANA,30,2022,Milk,223000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+NEBRASKA,31,2022,Milk,1416000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+NEVADA,32,2022,Milk,794000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+NEW HAMPSHIRE,33,2022,Milk,219000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+NEW JERSEY,34,2022,Milk,88000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+NEW MEXICO,35,2022,Milk,7145000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+NEW YORK,36,2022,Milk,15646000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+NORTH CAROLINA,37,2022,Milk,912000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+NORTH DAKOTA,38,2022,Milk,319000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+OHIO,39,2022,Milk,5526000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+OKLAHOMA,40,2022,Milk,716000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+OREGON,41,2022,Milk,2635000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+PENNSYLVANIA,42,2022,Milk,9949000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+RHODE ISLAND,44,2022,Milk,10000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+SOUTH CAROLINA,45,2022,Milk,161000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+SOUTH DAKOTA,46,2022,Milk,4161000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+TENNESSEE,47,2022,Milk,493000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+TEXAS,48,2022,Milk,16531000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+UTAH,49,2022,Milk,2170000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+VERMONT,50,2022,Milk,2554000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+VIRGINIA,51,2022,Milk,1424000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+WASHINGTON,53,2022,Milk,6239000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+WEST VIRGINIA,54,2022,Milk,75000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+WISCONSIN,55,2022,Milk,31882000000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+WYOMING,56,2022,Milk,239600000.0,LB,"MILK - PRODUCTION, MEASURED IN LB",2024-04-23 15:00:00.000,usda_quickstats_milk_2022_annual_production.csv,USDA NASS QuickStats
+CALIFORNIA,6,2022,Yogurt,221139000.0,LB,"YOGURT, PLAIN & FLAVORED - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_yogurt_2022_annual_production.csv,USDA NASS QuickStats
+NEW YORK,36,2022,Yogurt,793256000.0,LB,"YOGURT, PLAIN & FLAVORED - PRODUCTION, MEASURED IN LB",2025-04-25 15:00:00.000,usda_quickstats_yogurt_2022_annual_production.csv,USDA NASS QuickStats

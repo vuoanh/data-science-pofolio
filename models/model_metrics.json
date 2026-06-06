@@ -1,0 +1,194 @@
+{
+  "generated_at": "2026-06-06T16:23:50.271480+00:00",
+  "input_path": "SQL/USDA_production_2023.csv",
+  "feature_output_path": "data/processed/forecasting_features.csv",
+  "train_end_year": 2018,
+  "test_start_year": 2019,
+  "train_rows": 6724,
+  "test_rows": 518,
+  "target": "target_next_year_production",
+  "features": [
+    "Year",
+    "total_production",
+    "production_lag_1",
+    "production_lag_2",
+    "production_lag_3",
+    "rolling_3_mean",
+    "rolling_5_mean",
+    "yoy_pct_change",
+    "state_share_of_commodity",
+    "production_rank_in_commodity_year",
+    "years_observed_so_far",
+    "expanding_mean_to_date",
+    "State",
+    "commodity"
+  ],
+  "models_trained": [
+    "baseline_previous_year",
+    "baseline_rolling_3_year",
+    "random_forest",
+    "xgboost"
+  ],
+  "best_model_by_mae": "baseline_previous_year",
+  "best_model_by_rmse": "baseline_previous_year",
+  "best_ml_model_by_mae": "random_forest",
+  "best_ml_model_by_rmse": "random_forest",
+  "metrics": {
+    "overall": {
+      "baseline_previous_year": {
+        "mae": 53547189.34555984,
+        "rmse": 145148329.32076493,
+        "mape_percent": 14.482048849146231,
+        "r2": 0.9993889082097687
+      },
+      "baseline_rolling_3_year": {
+        "mae": 91395960.07014158,
+        "rmse": 253803495.35336712,
+        "mape_percent": 14.178727547549597,
+        "r2": 0.9981315668495684
+      },
+      "random_forest": {
+        "mae": 97540338.96299152,
+        "rmse": 300300564.89672,
+        "mape_percent": 15.882231555448017,
+        "r2": 0.9973842594518435
+      },
+      "xgboost": {
+        "mae": 121203238.72761825,
+        "rmse": 579835465.7763443,
+        "mape_percent": 12.52220499024175,
+        "r2": 0.9902480398595914
+      }
+    },
+    "by_commodity": {
+      "baseline_previous_year": {
+        "Cheese": {
+          "mae": 18477904.76190476,
+          "rmse": 29183044.13497891,
+          "mape_percent": 3.8780367835950673,
+          "r2": 0.9991140726816021
+        },
+        "Coffee": {
+          "mae": 2381200.0,
+          "rmse": 3199184.833672478,
+          "mape_percent": 9.326619127621758,
+          "r2": -1.0373291824101365
+        },
+        "Honey": {
+          "mae": 1069950.1557788944,
+          "rmse": 2684891.043876514,
+          "mape_percent": 29.449256370311478,
+          "r2": 0.8335783014437568
+        },
+        "Milk": {
+          "mae": 107844166.66666667,
+          "rmse": 212301796.58526993,
+          "mape_percent": 5.058813487467397,
+          "r2": 0.9992888898230581
+        },
+        "Yogurt": {
+          "mae": 42355454.54545455,
+          "rmse": 60910590.236091875,
+          "mape_percent": 12.384966924453646,
+          "r2": 0.9500575861809533
+        }
+      },
+      "baseline_rolling_3_year": {
+        "Cheese": {
+          "mae": 29662121.69312169,
+          "rmse": 45477909.49707325,
+          "mape_percent": 5.476873974646862,
+          "r2": 0.9978485171130829
+        },
+        "Coffee": {
+          "mae": 2085199.9999999993,
+          "rmse": 2426442.1965778065,
+          "mape_percent": 8.349890858125528,
+          "r2": -0.17198604690695585
+        },
+        "Honey": {
+          "mae": 837482.3266331658,
+          "rmse": 1982593.9733472844,
+          "mape_percent": 23.113336357913447,
+          "r2": 0.909254691540625
+        },
+        "Milk": {
+          "mae": 185976666.6666667,
+          "rmse": 371781799.5814212,
+          "mape_percent": 9.079034205752706,
+          "r2": 0.99781925037828
+        },
+        "Yogurt": {
+          "mae": 60264424.24242425,
+          "rmse": 75845922.92352445,
+          "mape_percent": 16.29692821198965,
+          "r2": 0.9225630224294483
+        }
+      },
+      "random_forest": {
+        "Cheese": {
+          "mae": 53364296.244788,
+          "rmse": 96580239.89295147,
+          "mape_percent": 6.443691342022426,
+          "r2": 0.990296833816903
+        },
+        "Coffee": {
+          "mae": 2842981.5631848597,
+          "rmse": 3103250.1793281795,
+          "mape_percent": 11.397268534466832,
+          "r2": -0.9169735462530557
+        },
+        "Honey": {
+          "mae": 883175.6961063335,
+          "rmse": 1914630.3104932543,
+          "mape_percent": 30.622582139016114,
+          "r2": 0.9153695835922334
+        },
+        "Milk": {
+          "mae": 192530853.0488573,
+          "rmse": 437993990.8661165,
+          "mape_percent": 6.061903578415235,
+          "r2": 0.9969733245115217
+        },
+        "Yogurt": {
+          "mae": 69688483.30373839,
+          "rmse": 87251089.05422793,
+          "mape_percent": 19.573304001678473,
+          "r2": 0.8975231833605728
+        }
+      },
+      "xgboost": {
+        "Cheese": {
+          "mae": 28428377.14285714,
+          "rmse": 48775814.055156,
+          "mape_percent": 4.856995714928288,
+          "r2": 0.9975251666337336
+        },
+        "Coffee": {
+          "mae": 1912510.8,
+          "rmse": 2431109.0512029277,
+          "mape_percent": 7.199719040202178,
+          "r2": -0.17649861953961943
+        },
+        "Honey": {
+          "mae": 906460.8588253768,
+          "rmse": 2227785.051794181,
+          "mape_percent": 24.257374829650207,
+          "r2": 0.8854214850797921
+        },
+        "Milk": {
+          "mae": 251527703.39166668,
+          "rmse": 851377632.1292273,
+          "mape_percent": 4.862972046203208,
+          "r2": 0.9885640031456379
+        },
+        "Yogurt": {
+          "mae": 39608438.36363637,
+          "rmse": 62464582.799475916,
+          "mape_percent": 13.652907046779292,
+          "r2": 0.9474767488978962
+        }
+      }
+    }
+  }
+}

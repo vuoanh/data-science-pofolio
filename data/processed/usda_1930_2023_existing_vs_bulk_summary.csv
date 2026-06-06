@@ -1,0 +1,7 @@
+commodity,existing_rows,bulk_rows,added_rows,removed_rows,changed_rows
+Cheese,508,1069,563,2,25
+Coffee,71,10,7,68,3
+Honey,1527,1619,92,0,98
+Milk,2772,4630,1858,0,118
+Yogurt,149,149,2,2,1
+ALL,5027,7477,2522,72,245

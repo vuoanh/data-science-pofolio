@@ -3,18 +3,20 @@ USDA Commodities SQL Portfolio
 07_dashboard_export.sql
 
 Purpose:
-Generate the dashboard-ready annual production dataset consumed by
-dashboard/app.py. Run 02_cleaning_transformations.sql first to create
-commodity_production_long.
+Generate the legacy SQLite annual production export. Run
+02_cleaning_transformations.sql first to create commodity_production_long.
+
+The current canonical dashboard/model CSV is refreshed from USDA QuickStats
+bulk exports by src/refresh_usda_bulk_data.py.
 
 Expected dashboard columns:
 State, Year, commodity, total_production
 
-From the sqlite3 shell, regenerate SQL/USDA_production_2023.csv with:
+From the sqlite3 shell, export the legacy SQLite view with:
 
 .headers on
 .mode csv
-.once SQL/USDA_production_2023.csv
+.once SQL/USDA_production_legacy_sqlite_export.csv
 .read SQL/07_dashboard_export.sql
 */
 

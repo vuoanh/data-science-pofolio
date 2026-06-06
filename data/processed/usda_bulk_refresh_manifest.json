@@ -1,0 +1,52 @@
+{
+  "generated_at": "2026-06-06T16:18:06.026641+00:00",
+  "source": "USDA NASS QuickStats bulk export",
+  "source_urls": [
+    "https://www.nass.usda.gov/datasets/qs.animals_products_20260605.txt.gz",
+    "https://www.nass.usda.gov/datasets/qs.crops_20260605.txt.gz"
+  ],
+  "bulk_paths": [
+    "/private/tmp/qs.animals_products_20260605.txt.gz",
+    "/private/tmp/qs.crops_20260605.txt.gz"
+  ],
+  "year_range": {
+    "start_year": 1930,
+    "end_year": 2023
+  },
+  "project_items": {
+    "MILK": {
+      "commodity": "Milk",
+      "short_desc": "MILK - PRODUCTION, MEASURED IN LB",
+      "unit_desc": "LB"
+    },
+    "CHEESE": {
+      "commodity": "Cheese",
+      "short_desc": "CHEESE - PRODUCTION, MEASURED IN LB",
+      "unit_desc": "LB"
+    },
+    "HONEY": {
+      "commodity": "Honey",
+      "short_desc": "HONEY - PRODUCTION, MEASURED IN LB",
+      "unit_desc": "LB"
+    },
+    "YOGURT": {
+      "commodity": "Yogurt",
+      "short_desc": "YOGURT, PLAIN & FLAVORED - PRODUCTION, MEASURED IN LB",
+      "unit_desc": "LB"
+    },
+    "COFFEE": {
+      "commodity": "Coffee",
+      "short_desc": "COFFEE - PRODUCTION, MEASURED IN LB, CHERRY BASIS",
+      "unit_desc": "LB, CHERRY BASIS"
+    }
+  },
+  "selected_rows": 7477,
+  "outputs": {
+    "raw_output": "data/raw/usda_quickstats_bulk_1930_2023_project_production.csv",
+    "processed_output": "data/processed/usda_production_1930_2023_complete.csv",
+    "dashboard_output": "SQL/USDA_production_2023.csv",
+    "coverage_output": "data/processed/usda_production_1930_2023_coverage_summary.csv",
+    "comparison_output": "data/processed/usda_1930_2023_existing_vs_bulk_comparison.csv",
+    "comparison_summary_output": "data/processed/usda_1930_2023_existing_vs_bulk_summary.csv"
+  }
+}
