@@ -42,10 +42,11 @@ jupyter_dash.default_mode = "external"
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import plotly.io as pio
 from dash import Dash, html, dcc, callback, Output, Input, State
 import dash_bootstrap_components as dbc
 import dash_ag_grid as dag
-from dash_bootstrap_templates import ThemeSwitchAIO, load_figure_template
+from dash_bootstrap_templates import ThemeSwitchAIO
 
 # Load data (long format: State, Year, commodity, total_production)
 DATA_PATH = "../SQL/USDA_production_2023.csv"
@@ -58,30 +59,109 @@ min_year = int(df["Year"].min())
 max_year = int(df["Year"].max())
 
 # Theme configuration
-url_theme1 = dbc.themes.COSMO
-url_theme2 = dbc.themes.CYBORG
-template_theme1 = "cosmo"
-template_theme2 = "cyborg"
+url_theme1 = dbc.themes.BOOTSTRAP
+url_theme2 = dbc.themes.DARKLY
+template_theme1 = "vizro_light"
+template_theme2 = "vizro_dark"
 
 # Consistent color map for commodities across all charts
 COMMODITY_COLORS = {
-    "Cheese": "#636EFA",
-    "Coffee": "#EF553B",
-    "Honey": "#00CC96",
-    "Milk": "#AB63FA",
-    "Yogurt": "#FFA15A",
+    "Cheese": "#5865F2",
+    "Coffee": "#C66A1D",
+    "Honey": "#D2A106",
+    "Milk": "#009E9A",
+    "Yogurt": "#D45B8C",
 }
 
 COMMODITY_ROW_STYLES = [
     {
         "condition": f"params.data.commodity === '{commodity}'",
-        "style": {"backgroundColor": color, "color": "white"},
+        "style": {
+            "backgroundColor": f"{color}1A",
+            "borderLeft": f"4px solid {color}",
+            "color": "#172033",
+        },
     }
     for commodity, color in COMMODITY_COLORS.items()
 ]
 
-# Load figure templates for both themes
-load_figure_template([template_theme1, template_theme2])
+FONT_FAMILY = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+
+pio.templates[template_theme1] = go.layout.Template(
+    layout=go.Layout(
+        font={"family": FONT_FAMILY, "color": "#172033"},
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        colorway=list(COMMODITY_COLORS.values()),
+        hoverlabel={
+            "bgcolor": "#FFFFFF",
+            "bordercolor": "#D8E0EA",
+            "font": {"color": "#172033", "family": FONT_FAMILY},
+        },
+    )
+)
+
+pio.templates[template_theme2] = go.layout.Template(
+    layout=go.Layout(
+        font={"family": FONT_FAMILY, "color": "#E6ECF5"},
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        colorway=list(COMMODITY_COLORS.values()),
+        hoverlabel={
+            "bgcolor": "#172033",
+            "bordercolor": "#334155",
+            "font": {"color": "#F8FAFC", "family": FONT_FAMILY},
+        },
+    )
+)
+
+
+def polish_figure(
+    fig,
+    dark=False,
+    left_margin=44,
+    bottom_margin=48,
+    x_tick_size=11,
+    y_tick_size=11,
+):
+    """Apply the shared dashboard chart styling."""
+    grid_color = "rgba(226, 232, 240, 0.16)" if dark else "rgba(15, 23, 42, 0.08)"
+    text_color = "#E6ECF5" if dark else "#172033"
+    axis_color = "#CBD5E1" if dark else "#475569"
+    fig.update_layout(
+        margin={"l": left_margin, "r": 24, "t": 72, "b": bottom_margin},
+        font={"family": FONT_FAMILY, "size": 13, "color": text_color},
+        legend={
+            "orientation": "h",
+            "yanchor": "bottom",
+            "y": 1.02,
+            "xanchor": "right",
+            "x": 1,
+            "title": None,
+        },
+        title={"x": 0.02, "xanchor": "left", "font": {"size": 17, "color": text_color}},
+    )
+    fig.update_xaxes(
+        showgrid=False,
+        zeroline=False,
+        color=axis_color,
+        automargin=True,
+        title_font={"size": 12, "color": axis_color},
+        title_standoff=10,
+        tickfont={"size": x_tick_size, "color": axis_color},
+    )
+    fig.update_yaxes(
+        tickformat=".2s",
+        showgrid=True,
+        gridcolor=grid_color,
+        zeroline=False,
+        color=axis_color,
+        automargin=True,
+        title_font={"size": 12, "color": axis_color},
+        title_standoff=10,
+        tickfont={"size": y_tick_size, "color": axis_color},
+    )
+    return fig
 
 # Initialize Dash app with both theme stylesheets
 app = Dash(__name__, external_stylesheets=[url_theme1, url_theme2])
@@ -95,43 +175,53 @@ app.layout = dbc.Container(
             dbc.Col(
                 html.Div(
                     [
-                        html.H1("USDA Agricultural Production Dashboard"),
+                        html.H1("USDA Agricultural Production Dashboard", className="app-title"),
                         html.P(
                             "Explore US agricultural production data from 1930 to 2023. "
-                            "Select states, year ranges, and commodities to visualize trends."
+                            "Select states, year ranges, and commodities to visualize trends.",
+                            className="app-subtitle",
                         ),
                     ],
-                    className="text-center my-4",
+                    className="app-heading",
                 )
-            )
+            ),
+            className="app-header",
         ),
         # Filter Controls
         dbc.Row(
             [
                 dbc.Col(
                     [
-                        html.Label("Theme:", className="fw-bold"),
-                        ThemeSwitchAIO(aio_id="theme", themes=[url_theme1, url_theme2]),
+                        html.Label("Theme:", className="control-label"),
+                        html.Div(
+                            ThemeSwitchAIO(
+                                aio_id="theme",
+                                themes=[url_theme1, url_theme2],
+                                switch_props={"className": "theme-toggle-switch"},
+                            ),
+                            className="theme-switch-shell",
+                        ),
                     ],
                     md=1,
-                    style={"borderRight": "1px solid #dee2e6", "paddingRight": "15px"},
+                    className="filter-block theme-filter",
                 ),
                 dbc.Col(
                     [
-                        html.Label("Commodities:", className="fw-bold"),
+                        html.Label("Commodities:", className="control-label"),
                         dbc.Checklist(
                             id="commodity-checklist",
                             options=[{"label": c, "value": c} for c in commodities],
                             value=["Yogurt", "Honey"],
                             inline=True,
+                            className="commodity-checklist",
                         ),
                     ],
                     md=3,
-                    style={"borderRight": "1px solid #dee2e6", "paddingRight": "15px"},
+                    className="filter-block",
                 ),
                 dbc.Col(
                     [
-                        html.Label("Year Range:", className="fw-bold"),
+                        html.Label("Year Range:", className="control-label"),
                         dcc.RangeSlider(
                             id="year-slider",
                             min=min_year,
@@ -143,35 +233,39 @@ app.layout = dbc.Container(
                             },
                             step=1,
                             tooltip={"placement": "bottom", "always_visible": True},
+                            className="year-slider",
                         ),
                     ],
                     md=5,
-                    style={"borderRight": "1px solid #dee2e6", "paddingRight": "15px"},
+                    className="filter-block",
                 ),
                 dbc.Col(
                     [
-                        html.Label("Select States:", className="fw-bold"),
+                        html.Label("Select States:", className="control-label"),
                         dcc.Dropdown(
                             id="state-dropdown",
                             options=[{"label": s, "value": s} for s in states],
                             value=["CALIFORNIA", "WISCONSIN", "NEW YORK"],
                             multi=True,
                             placeholder="Select states...",
+                            className="state-dropdown",
                         ),
                     ],
                     md=3,
+                    className="filter-block filter-block-last",
                 ),
             ],
-            className="mb-4 p-3 bg-light rounded",
+            className="filter-panel mb-4",
         ),
         # Line Chart row
         dbc.Row(
             dbc.Col(
                 dbc.Card(
                     [
-                        dbc.CardHeader(html.H5("USA Production Trends Over Time")),
-                        dbc.CardBody(dcc.Graph(id="line-chart")),
-                    ]
+                        dbc.CardHeader(html.H5("USA Production Trends Over Time"), className="viz-card-header"),
+                        dbc.CardBody(dcc.Graph(id="line-chart"), className="viz-card-body"),
+                    ],
+                    className="viz-card",
                 ),
                 width=12,
             ),
@@ -183,9 +277,10 @@ app.layout = dbc.Container(
                 dbc.Col(
                     dbc.Card(
                         [
-                            dbc.CardHeader(html.H5("Top 10 States (Most Recent Selected Year)")),
-                            dbc.CardBody(dcc.Graph(id="bar-chart")),
-                        ]
+                            dbc.CardHeader(html.H5("Top 10 States (Most Recent Selected Year)"), className="viz-card-header"),
+                            dbc.CardBody(dcc.Graph(id="bar-chart"), className="viz-card-body"),
+                        ],
+                        className="viz-card",
                     ),
                     md=6,
                 ),
@@ -201,16 +296,17 @@ app.layout = dbc.Container(
                                             id="download-btn",
                                             color="primary",
                                             size="sm",
-                                            className="float-end",
+                                            className="float-end download-button",
                                         ),
                                     ]
-                                )
+                                ),
+                                className="viz-card-header",
                             ),
                             dcc.Download(id="download-csv"),
                             dbc.CardBody(
                                 dag.AgGrid(
                                     id="data-table",
-                                    className="ag-theme-balham",
+                                    className="ag-theme-quartz viz-grid",
                                     columnDefs=[
                                         {"field": "State", "sortable": True, "filter": True},
                                         {"field": "Year", "sortable": True, "filter": True},
@@ -233,9 +329,11 @@ app.layout = dbc.Container(
                                     getRowStyle={
                                         "styleConditions": COMMODITY_ROW_STYLES
                                     },
-                                )
+                                ),
+                                className="viz-card-body",
                             ),
-                        ]
+                        ],
+                        className="viz-card",
                     ),
                     md=6,
                 ),
@@ -243,6 +341,8 @@ app.layout = dbc.Container(
             className="mb-4",
         ),
     ],
+    id="dashboard-shell",
+    className="dashboard-shell theme-light",
     fluid=True,
 )
 
@@ -250,6 +350,15 @@ app.layout = dbc.Container(
 # =============================================================================
 # CALLBACKS
 # =============================================================================
+
+
+@callback(
+    Output("dashboard-shell", "className"),
+    Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
+)
+def update_dashboard_theme(toggle):
+    """Switch the dashboard shell between the light and dark visual themes."""
+    return "dashboard-shell theme-light" if toggle else "dashboard-shell theme-dark"
 
 
 @callback(
@@ -301,13 +410,9 @@ def update_line_chart(year_range, selected_commodities, toggle):
         markers=True,
         template=template,
     )
-    fig.update_traces(marker=dict(size=10))
-    fig.update_layout(
-        hovermode="x unified",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        title={'x':0.5}
-    )
-    return fig
+    fig.update_traces(marker=dict(size=7), line=dict(width=2.5))
+    fig.update_layout(hovermode="x unified")
+    return polish_figure(fig, dark=not toggle)
 
 
 @callback(
@@ -346,7 +451,7 @@ def update_bar_chart(year_range, selected_commodities, toggle):
     if available_years.empty:
         fig = go.Figure()
         fig.update_layout(
-            title=f"<b>Top 10 States - {commodity_label} Production",
+            title=f"<b>Top 10 States - {commodity_label} Production</b>",
             template=template,
             annotations=[
                 {
@@ -361,7 +466,7 @@ def update_bar_chart(year_range, selected_commodities, toggle):
             xaxis={"visible": False},
             yaxis={"visible": False},
         )
-        return fig
+        return polish_figure(fig, dark=not toggle)
 
     selected_year = int(available_years.max())
 
@@ -386,19 +491,23 @@ def update_bar_chart(year_range, selected_commodities, toggle):
         y="total_production",
         color="commodity",
         color_discrete_map=COMMODITY_COLORS,
-        title=f"<b>Top 10 States - {commodity_label} Production ({selected_year})",
-        labels={"total_production": f"<b>Production (LB)", "State": f"<b>State", "commodity": f"<b>Commodity"},
+        title=f"<b>Top 10 States - {commodity_label} Production ({selected_year})</b>",
+        labels={"total_production": "Production (LB)", "State": "State", "commodity": "Commodity"},
         category_orders={"State": top_states},
         template=template,
     )
     fig.update_layout(
         barmode="stack",
         xaxis_tickangle=-45,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), 
-        title={'x':0.5}
     )
 
-    return fig
+    return polish_figure(
+        fig,
+        dark=not toggle,
+        left_margin=58,
+        bottom_margin=88,
+        x_tick_size=10,
+    )
 
 
 @callback(
