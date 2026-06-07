@@ -79,7 +79,6 @@ COMMODITY_ROW_STYLES = [
         "style": {
             "backgroundColor": f"{color}1A",
             "borderLeft": f"4px solid {color}",
-            "color": "#172033",
         },
     }
     for commodity, color in COMMODITY_COLORS.items()

@@ -134,7 +134,6 @@ models need to be judged against simple baselines rather than in isolation.
 ```text
 data-science-USDA-commodities/
 ├── README.md
-├── SQL_PORTFOLIO_IMPROVEMENT_PLAN.md
 ├── requirements.txt
 ├── dashboard_light.png
 ├── dashboard_dark.png
@@ -174,7 +173,6 @@ data-science-USDA-commodities/
 │   ├── 05_window_function_analysis.sql
 │   ├── 06_state_commodity_rankings.sql
 │   ├── 07_dashboard_export.sql
-│   ├── 99_legacy_original_queries.sql
 │   ├── USDA_production_2023.csv
 │   └── raw commodity CSV files
 └── dashboard/

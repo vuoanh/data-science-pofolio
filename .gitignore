@@ -208,5 +208,18 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Local workspace junk
+.claude/
+*.local.json
+*.tmp
+*.temp
+*~
+*.swp
+*.swo
+Thumbs.db
+
+# Local/private project notes
+docs/
 SQL_PORTFOLIO_IMPROVEMENT_PLAN.md
 SQL/99_legacy_original_queries.sql

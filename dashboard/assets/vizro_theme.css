@@ -273,6 +273,12 @@ body {
   --ag-header-foreground-color: #b6c2d1;
 }
 
+.theme-dark .viz-grid .ag-cell,
+.theme-dark .viz-grid .ag-header-cell-text,
+.theme-dark .viz-grid .ag-value-change-value {
+  color: #f8fafc !important;
+}
+
 @media (max-width: 992px) {
   .dashboard-shell {
     padding: 18px 14px 24px;
