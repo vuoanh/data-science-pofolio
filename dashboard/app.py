@@ -19,7 +19,7 @@ Expects a CSV file at '../SQL/USDA_production_2023.csv' with columns:
     - State: US state name (uppercase)
     - Year: Production year (integer)
     - commodity: Product type (Cheese, Coffee, Honey, Milk, Yogurt)
-    - total_production: Annual production in the USDA-reported unit
+    - total_production: Annual production in pounds
 
 Usage:
 ------
@@ -41,6 +41,7 @@ jupyter_dash.default_mode = "external"
 
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 from dash import Dash, html, dcc, callback, Output, Input, State
 import dash_bootstrap_components as dbc
 import dash_ag_grid as dag
@@ -70,6 +71,14 @@ COMMODITY_COLORS = {
     "Milk": "#AB63FA",
     "Yogurt": "#FFA15A",
 }
+
+COMMODITY_ROW_STYLES = [
+    {
+        "condition": f"params.data.commodity === '{commodity}'",
+        "style": {"backgroundColor": color, "color": "white"},
+    }
+    for commodity, color in COMMODITY_COLORS.items()
+]
 
 # Load figure templates for both themes
 load_figure_template([template_theme1, template_theme2])
@@ -222,13 +231,7 @@ app.layout = dbc.Container(
                                         "paginationPageSize": 10,
                                     },
                                     getRowStyle={
-                                        "styleConditions": [
-                                            {"condition": "params.data.commodity === 'Cheese'", "style": {"backgroundColor": "#636EFA", "color": "white"}},
-                                            {"condition": "params.data.commodity === 'Coffee'", "style": {"backgroundColor": "#EF553B", "color": "white"}},
-                                            {"condition": "params.data.commodity === 'Honey'", "style": {"backgroundColor": "#00CC96", "color": "white"}},
-                                            {"condition": "params.data.commodity === 'Milk'", "style": {"backgroundColor": "#AB63FA", "color": "white"}},
-                                            {"condition": "params.data.commodity === 'Yogurt'", "style": {"backgroundColor": "#FFA15A", "color": "white"}},
-                                        ]
+                                        "styleConditions": COMMODITY_ROW_STYLES
                                     },
                                 )
                             ),
@@ -292,7 +295,7 @@ def update_line_chart(year_range, selected_commodities, toggle):
         title=title,
         labels={
             "Year": f"<b>Year",
-            "total_production": f"<b>Production (USDA unit)",
+            "total_production": f"<b>Production (LB)",
             "commodity": f"<b>Commodity",
         },
         markers=True,
@@ -317,9 +320,8 @@ def update_bar_chart(year_range, selected_commodities, toggle):
     """
     Update bar chart showing top 10 producing states.
 
-    Displays the top 10 states by production value for the most recent year
-    in the selected range. If the selected year exceeds available data,
-    falls back to the latest year with data.
+    Displays the top 10 states by total production for the latest available
+    data year inside the selected range.
 
     Args:
         year_range: List of [start_year, end_year] from the range slider.
@@ -334,12 +336,34 @@ def update_bar_chart(year_range, selected_commodities, toggle):
     if not selected_commodities:
         selected_commodities = ["Yogurt", "Honey"]
 
-    # Find the latest year with data for selected commodities
-    lastyear = int(df[df["commodity"].isin(selected_commodities)]["Year"].max())
-    if int(year_range[1]) > lastyear:
-        selected_year = lastyear
-    else:
-        selected_year = year_range[1]
+    available_years = df[
+        (df["Year"] >= year_range[0])
+        & (df["Year"] <= year_range[1])
+        & (df["commodity"].isin(selected_commodities))
+    ]["Year"]
+    commodity_label = ", ".join(selected_commodities)
+
+    if available_years.empty:
+        fig = go.Figure()
+        fig.update_layout(
+            title=f"<b>Top 10 States - {commodity_label} Production",
+            template=template,
+            annotations=[
+                {
+                    "text": "No production records in the selected year range",
+                    "xref": "paper",
+                    "yref": "paper",
+                    "x": 0.5,
+                    "y": 0.5,
+                    "showarrow": False,
+                }
+            ],
+            xaxis={"visible": False},
+            yaxis={"visible": False},
+        )
+        return fig
+
+    selected_year = int(available_years.max())
 
     # Aggregate production across selected commodities by state
     filtered_df = df[
@@ -348,8 +372,14 @@ def update_bar_chart(year_range, selected_commodities, toggle):
     ].groupby(["State", "commodity"])["total_production"].sum().reset_index()
 
     filtered_df = filtered_df.dropna(subset=["total_production"])
-    top_10 = filtered_df.nlargest(10, "total_production")
-    commodity_label = ", ".join(selected_commodities)
+    state_totals = (
+        filtered_df.groupby("State", as_index=False)["total_production"]
+        .sum()
+        .rename(columns={"total_production": "state_total_production"})
+    )
+    top_states = state_totals.nlargest(10, "state_total_production")["State"].tolist()
+    top_10 = filtered_df[filtered_df["State"].isin(top_states)].copy()
+
     fig = px.bar(
         top_10,
         x="State",
@@ -357,10 +387,12 @@ def update_bar_chart(year_range, selected_commodities, toggle):
         color="commodity",
         color_discrete_map=COMMODITY_COLORS,
         title=f"<b>Top 10 States - {commodity_label} Production ({selected_year})",
-        labels={"total_production": f"<b>Production (USDA unit)", "State": f"<b>State", "commodity": f"<b>Commodity"},
+        labels={"total_production": f"<b>Production (LB)", "State": f"<b>State", "commodity": f"<b>Commodity"},
+        category_orders={"State": top_states},
         template=template,
     )
     fig.update_layout(
+        barmode="stack",
         xaxis_tickangle=-45,
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1), 
         title={'x':0.5}
@@ -456,4 +488,4 @@ def download_csv(n_clicks, selected_states, year_range, selected_commodities):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=1234)
+    app.run(debug=True, port=1234, use_reloader=False)

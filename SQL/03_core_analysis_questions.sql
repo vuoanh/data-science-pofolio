@@ -112,8 +112,9 @@ WITH annual_totals AS (
     GROUP BY commodity, state, year
 ),
 latest_year AS (
-    SELECT MAX(year) AS year
+    SELECT commodity, MAX(year) AS year
     FROM annual_totals
+    GROUP BY commodity
 )
 SELECT
     at.state,
@@ -122,7 +123,8 @@ SELECT
     at.annual_production
 FROM annual_totals at
 JOIN latest_year ly
-    ON at.year = ly.year
+    ON at.commodity = ly.commodity
+   AND at.year = ly.year
 ORDER BY at.annual_production DESC
 LIMIT 15;
 

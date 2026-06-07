@@ -208,18 +208,17 @@ ORDER BY top_5_years DESC, commodity, state;
 
 -- 6. April 2023 cheese producers above 100 million, a direct business filter.
 SELECT
-    sl.State,
-    SUM(cp.Value) AS april_2023_cheese_production,
+    state AS State,
+    SUM(production_value) AS april_2023_cheese_production,
     CASE
-        WHEN SUM(cp.Value) > 200000000 THEN 'National priority'
-        WHEN SUM(cp.Value) > 100000000 THEN 'Regional priority'
+        WHEN SUM(production_value) > 200000000 THEN 'National priority'
+        WHEN SUM(production_value) > 100000000 THEN 'Regional priority'
         ELSE 'Monitor'
     END AS marketing_priority
-FROM cheese_production cp
-JOIN state_lookup sl
-    ON CAST(cp.State_ANSI AS INTEGER) = sl.State_ANSI
-WHERE cp."Year" = 2023
-  AND cp.Period = 'APR'
-GROUP BY sl.State
-HAVING SUM(cp.Value) > 100000000
+FROM commodity_production_long
+WHERE commodity = 'Cheese'
+  AND year = 2023
+  AND period = 'APR'
+GROUP BY state
+HAVING SUM(production_value) > 100000000
 ORDER BY april_2023_cheese_production DESC;
