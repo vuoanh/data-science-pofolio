@@ -2,9 +2,11 @@
 
 The script writes:
 - data/processed/forecasting_features.csv
-- models/model_metrics.json
+- models/model_metrics.json       — metrics + interval coverage per model
 - models/feature_importance.csv
-- models/test_predictions.csv
+- models/test_predictions.csv     — backtest rows with prediction intervals
+- models/random_forest.joblib     — fitted pipeline for forward forecasting
+- models/xgboost.joblib           — fitted pipeline (when xgboost is installed)
 """
 
 from __future__ import annotations
@@ -15,6 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import joblib
 import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer, TransformedTargetRegressor
@@ -34,7 +37,13 @@ from build_features import (
     TARGET_COLUMN,
     write_feature_dataset,
 )
-from evaluate_model import metrics_by_group, regression_metrics
+from evaluate_model import (
+    check_interval_coverage,
+    compute_residual_intervals,
+    compute_rf_intervals,
+    metrics_by_group,
+    regression_metrics,
+)
 
 
 def make_preprocessor() -> ColumnTransformer:
@@ -161,6 +170,36 @@ def split_train_test(
     return train, test
 
 
+def _add_intervals(
+    frame: pd.DataFrame,
+    model_name: str,
+    fitted_pipeline: TransformedTargetRegressor | None,
+    x_test: pd.DataFrame,
+) -> pd.DataFrame:
+    """Attach prediction interval columns to a prediction frame.
+
+    Random Forest uses tree-ensemble quantiles (no calibration data needed).
+    All other models use symmetric Gaussian intervals from test-set residuals.
+    """
+    pred = frame["prediction"].to_numpy()
+    actual = frame[TARGET_COLUMN].to_numpy()
+
+    if model_name == "random_forest" and fitted_pipeline is not None:
+        lo80, hi80, lo95, hi95 = compute_rf_intervals(fitted_pipeline, x_test)
+        method = "rf_quantile"
+    else:
+        lo80, hi80, lo95, hi95 = compute_residual_intervals(pred, actual)
+        method = "residual_normal"
+
+    return frame.assign(
+        pi_80_lower=lo80,
+        pi_80_upper=hi80,
+        pi_95_lower=lo95,
+        pi_95_upper=hi95,
+        interval_method=method,
+    )
+
+
 def evaluate_predictions(predictions: pd.DataFrame) -> dict[str, Any]:
     """Build overall and per-commodity metrics from long prediction rows."""
     metrics: dict[str, Any] = {"overall": {}, "by_commodity": {}}
@@ -188,64 +227,73 @@ def train_and_evaluate(args: argparse.Namespace) -> dict[str, Any]:
     y_train = train[TARGET_COLUMN]
     x_test = test[feature_columns]
 
+    output_dir = Path(args.model_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     prediction_frames: list[pd.DataFrame] = []
 
+    # Baseline models — no fitting, residual-based intervals
     baseline_predictions = {
         "baseline_previous_year": test["total_production"],
         "baseline_rolling_3_year": test["rolling_3_mean"].fillna(test["total_production"]),
     }
     for model_name, prediction in baseline_predictions.items():
-        prediction_frames.append(
-            test.loc[:, ["State", "commodity", "Year", "target_year", TARGET_COLUMN]].assign(
-                model=model_name,
-                prediction=np.asarray(prediction, dtype=float),
-            )
-        )
+        frame = test.loc[
+            :, ["State", "commodity", "Year", "target_year", TARGET_COLUMN]
+        ].assign(model=model_name, prediction=np.asarray(prediction, dtype=float))
+        prediction_frames.append(_add_intervals(frame, model_name, None, x_test))
 
     importance_frames: list[pd.DataFrame] = []
+    fitted_pipelines: dict[str, TransformedTargetRegressor] = {}
+
     for model_name, pipeline in build_models(args.random_state).items():
         pipeline.fit(x_train, y_train)
+        fitted_pipelines[model_name] = pipeline
+
         prediction = pipeline.predict(x_test)
-        prediction_frames.append(
-            test.loc[:, ["State", "commodity", "Year", "target_year", TARGET_COLUMN]].assign(
-                model=model_name,
-                prediction=prediction,
-            )
-        )
+        frame = test.loc[
+            :, ["State", "commodity", "Year", "target_year", TARGET_COLUMN]
+        ].assign(model=model_name, prediction=prediction)
+        prediction_frames.append(_add_intervals(frame, model_name, pipeline, x_test))
         importance_frames.append(extract_feature_importance(model_name, pipeline))
+
+        joblib.dump(pipeline, output_dir / f"{model_name}.joblib")
 
     predictions = pd.concat(prediction_frames, ignore_index=True)
     metrics = evaluate_predictions(predictions)
+
+    # Empirical coverage check per model
+    coverage: dict[str, Any] = {}
+    for model_name, model_df in predictions.groupby("model"):
+        coverage[model_name] = check_interval_coverage(
+            model_df[TARGET_COLUMN].to_numpy(),
+            model_df["pi_80_lower"].to_numpy(),
+            model_df["pi_80_upper"].to_numpy(),
+            model_df["pi_95_lower"].to_numpy(),
+            model_df["pi_95_upper"].to_numpy(),
+        )
+
     best_model = min(
         metrics["overall"],
-        key=lambda model_name: metrics["overall"][model_name]["mae"],
+        key=lambda m: metrics["overall"][m]["mae"],
     )
     best_model_by_rmse = min(
         metrics["overall"],
-        key=lambda model_name: metrics["overall"][model_name]["rmse"],
+        key=lambda m: metrics["overall"][m]["rmse"],
     )
-    ml_model_names = [
-        model_name
-        for model_name in metrics["overall"]
-        if not model_name.startswith("baseline_")
-    ]
+    ml_model_names = [m for m in metrics["overall"] if not m.startswith("baseline_")]
     best_ml_model_by_mae = min(
-        ml_model_names,
-        key=lambda model_name: metrics["overall"][model_name]["mae"],
+        ml_model_names, key=lambda m: metrics["overall"][m]["mae"]
     )
     best_ml_model_by_rmse = min(
-        ml_model_names,
-        key=lambda model_name: metrics["overall"][model_name]["rmse"],
+        ml_model_names, key=lambda m: metrics["overall"][m]["rmse"]
     )
 
-    output_dir = Path(args.model_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
     predictions.to_csv(output_dir / "test_predictions.csv", index=False)
 
     if importance_frames:
         pd.concat(importance_frames, ignore_index=True).to_csv(
-            output_dir / "feature_importance.csv",
-            index=False,
+            output_dir / "feature_importance.csv", index=False
         )
 
     metadata: dict[str, Any] = {
@@ -264,6 +312,7 @@ def train_and_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "best_ml_model_by_mae": best_ml_model_by_mae,
         "best_ml_model_by_rmse": best_ml_model_by_rmse,
         "metrics": metrics,
+        "interval_coverage": coverage,
     }
 
     metrics_path = output_dir / "model_metrics.json"
@@ -291,15 +340,16 @@ def main() -> None:
     print(f"Trained models: {', '.join(metadata['models_trained'])}")
     print(f"Train rows: {metadata['train_rows']:,}; test rows: {metadata['test_rows']:,}")
     print(
-        "Best by MAE: "
-        f"{best} | MAE={best_metrics['mae']:.2f} | "
+        f"Best by MAE: {best} | MAE={best_metrics['mae']:.2f} | "
         f"RMSE={best_metrics['rmse']:.2f} | R2={best_metrics['r2']:.3f}"
     )
     print(
-        "Best ML by RMSE: "
-        f"{best_ml} | MAE={best_ml_metrics['mae']:.2f} | "
+        f"Best ML by RMSE: {best_ml} | MAE={best_ml_metrics['mae']:.2f} | "
         f"RMSE={best_ml_metrics['rmse']:.2f} | R2={best_ml_metrics['r2']:.3f}"
     )
+    print("\nInterval coverage (empirical vs nominal):")
+    for model_name, cov in metadata["interval_coverage"].items():
+        print(f"  {model_name}: 80%→{cov['coverage_80_pct']}%  95%→{cov['coverage_95_pct']}%")
 
 
 if __name__ == "__main__":

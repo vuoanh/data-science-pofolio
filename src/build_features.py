@@ -109,6 +109,60 @@ def build_forecasting_frame(df: pd.DataFrame) -> pd.DataFrame:
     ).reset_index(drop=True)
 
 
+def build_forward_features(df: pd.DataFrame) -> pd.DataFrame:
+    """Build features for the latest observed year per State/commodity.
+
+    Applies the same lag, rolling, rank, and share engineering as
+    build_forecasting_frame but returns the most recent row per group.
+    No target column is included because the next-year observation does not
+    yet exist.
+    """
+    data = df.sort_values(["State", "commodity", "Year"]).copy()
+    grp = data.groupby(["State", "commodity"], sort=False)
+
+    data["production_lag_1"] = grp["total_production"].shift(1)
+    data["production_lag_2"] = grp["total_production"].shift(2)
+    data["production_lag_3"] = grp["total_production"].shift(3)
+    data["rolling_3_mean"] = grp["total_production"].transform(
+        lambda v: v.rolling(window=3, min_periods=1).mean()
+    )
+    data["rolling_5_mean"] = grp["total_production"].transform(
+        lambda v: v.rolling(window=5, min_periods=1).mean()
+    )
+    data["expanding_mean_to_date"] = grp["total_production"].transform(
+        lambda v: v.expanding(min_periods=1).mean()
+    )
+    data["years_observed_so_far"] = grp.cumcount() + 1
+    data["yoy_pct_change"] = (
+        (data["total_production"] - data["production_lag_1"])
+        / data["production_lag_1"].replace(0, np.nan)
+    )
+    commodity_year_total = (
+        data.groupby(["commodity", "Year"])["total_production"].transform("sum")
+    )
+    data["state_share_of_commodity"] = (
+        data["total_production"] / commodity_year_total.replace(0, np.nan)
+    )
+    data["production_rank_in_commodity_year"] = data.groupby(
+        ["commodity", "Year"]
+    )["total_production"].rank(method="dense", ascending=False)
+
+    latest = (
+        data.groupby(["State", "commodity"], sort=False)
+        .last()
+        .reset_index()
+    )
+    latest["forecast_year"] = latest["Year"] + 1
+    latest = latest.replace([np.inf, -np.inf], np.nan)
+
+    keep = (
+        ["State", "commodity", "Year", "forecast_year", "total_production"]
+        + NUMERIC_FEATURES
+    )
+    keep = list(dict.fromkeys(keep))
+    return latest[[c for c in keep if c in latest.columns]].reset_index(drop=True)
+
+
 def write_feature_dataset(input_path: str | Path, output_path: str | Path) -> pd.DataFrame:
     """Build and write the forecasting feature table."""
     df = load_dashboard_data(input_path)
