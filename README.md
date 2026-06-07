@@ -197,7 +197,6 @@ commodities.
 | `data/processed/usda_production_1930_2023_complete.csv` | 7,477 | Audit-rich annual state-level production dataset |
 | `SQL/USDA_production_2023.csv` | 7,477 | Dashboard/model-ready canonical production dataset |
 | `data/processed/usda_production_1930_2023_coverage_summary.csv` | 225 | Coverage summary by year and commodity |
-| `data/processed/usda_1930_2023_existing_vs_bulk_summary.csv` | 6 | Original-vs-refreshed comparison summary |
 | `state_lookup.csv` | 50 | State ANSI code reference |
 
 ## Reproduce The Analysis
