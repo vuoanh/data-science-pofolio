@@ -1,12 +1,12 @@
-"""Train baseline, Random Forest, and XGBoost forecasting models.
+"""Train commodity-specific baseline, Random Forest, and XGBoost models.
 
 The script writes:
 - data/processed/forecasting_features.csv
 - models/model_metrics.json       — metrics + interval coverage per model
 - models/feature_importance.csv
 - models/test_predictions.csv     — backtest rows with prediction intervals
-- models/random_forest.joblib     — fitted pipeline for forward forecasting
-- models/xgboost.joblib           — fitted pipeline (when xgboost is installed)
+- models/by_commodity/<commodity>/random_forest.joblib
+- models/by_commodity/<commodity>/xgboost.joblib (when xgboost is installed)
 """
 
 from __future__ import annotations
@@ -121,6 +121,18 @@ def build_models(random_state: int) -> dict[str, TransformedTargetRegressor]:
     return models
 
 
+def safe_path_component(value: str) -> str:
+    """Return a stable filesystem-safe directory name."""
+    return (
+        value.strip()
+        .lower()
+        .replace("&", "and")
+        .replace("/", "_")
+        .replace("\\", "_")
+        .replace(" ", "_")
+    )
+
+
 def clean_feature_name(name: str) -> str:
     """Make sklearn-transformed feature names easier to read."""
     return name.replace("num__", "").replace("cat__", "")
@@ -129,6 +141,7 @@ def clean_feature_name(name: str) -> str:
 def extract_feature_importance(
     model_name: str,
     estimator: TransformedTargetRegressor,
+    commodity: str,
 ) -> pd.DataFrame:
     """Extract feature importances from tree-based models."""
     pipeline = estimator.regressor_
@@ -143,12 +156,13 @@ def extract_feature_importance(
     return (
         pd.DataFrame(
             {
+                "commodity": commodity,
                 "model": model_name,
                 "feature": feature_names,
                 "importance": np.asarray(importances, dtype=float),
             }
         )
-        .sort_values(["model", "importance"], ascending=[True, False])
+        .sort_values(["commodity", "model", "importance"], ascending=[True, True, False])
         .reset_index(drop=True)
     )
 
@@ -220,52 +234,86 @@ def evaluate_predictions(predictions: pd.DataFrame) -> dict[str, Any]:
 def train_and_evaluate(args: argparse.Namespace) -> dict[str, Any]:
     """Train models, write artifacts, and return metrics metadata."""
     features = write_feature_dataset(args.input, args.features_output)
-    train, test = split_train_test(features, args.train_end_year, args.test_start_year)
-
     feature_columns = NUMERIC_FEATURES + CATEGORICAL_FEATURES
-    x_train = train[feature_columns]
-    y_train = train[TARGET_COLUMN]
-    x_test = test[feature_columns]
 
     output_dir = Path(args.model_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+    by_commodity_dir = output_dir / "by_commodity"
+    by_commodity_dir.mkdir(parents=True, exist_ok=True)
 
     prediction_frames: list[pd.DataFrame] = []
-
-    # Baseline models — no fitting, residual-based intervals
-    baseline_predictions = {
-        "baseline_previous_year": test["total_production"],
-        "baseline_rolling_3_year": test["rolling_3_mean"].fillna(test["total_production"]),
-    }
-    for model_name, prediction in baseline_predictions.items():
-        frame = test.loc[
-            :, ["State", "commodity", "Year", "target_year", TARGET_COLUMN]
-        ].assign(model=model_name, prediction=np.asarray(prediction, dtype=float))
-        prediction_frames.append(_add_intervals(frame, model_name, None, x_test))
-
     importance_frames: list[pd.DataFrame] = []
-    fitted_pipelines: dict[str, TransformedTargetRegressor] = {}
+    model_artifacts: dict[str, dict[str, str]] = {}
+    train_rows_by_commodity: dict[str, int] = {}
+    test_rows_by_commodity: dict[str, int] = {}
+    skipped_commodities: list[dict[str, str]] = []
 
-    for model_name, pipeline in build_models(args.random_state).items():
-        pipeline.fit(x_train, y_train)
-        fitted_pipelines[model_name] = pipeline
+    for commodity in sorted(features["commodity"].unique()):
+        commodity_features = features[features["commodity"] == commodity].copy()
+        try:
+            train, test = split_train_test(
+                commodity_features,
+                args.train_end_year,
+                args.test_start_year,
+            )
+        except ValueError as exc:
+            skipped_commodities.append({"commodity": commodity, "reason": str(exc)})
+            continue
 
-        prediction = pipeline.predict(x_test)
-        frame = test.loc[
-            :, ["State", "commodity", "Year", "target_year", TARGET_COLUMN]
-        ].assign(model=model_name, prediction=prediction)
-        prediction_frames.append(_add_intervals(frame, model_name, pipeline, x_test))
-        importance_frames.append(extract_feature_importance(model_name, pipeline))
+        x_train = train[feature_columns]
+        y_train = train[TARGET_COLUMN]
+        x_test = test[feature_columns]
+        train_rows_by_commodity[commodity] = int(len(train))
+        test_rows_by_commodity[commodity] = int(len(test))
 
-        joblib.dump(pipeline, output_dir / f"{model_name}.joblib")
+        # Baseline models — no fitting, residual-based intervals
+        baseline_predictions = {
+            "baseline_previous_year": test["total_production"],
+            "baseline_rolling_3_year": test["rolling_3_mean"].fillna(test["total_production"]),
+        }
+        for model_name, prediction in baseline_predictions.items():
+            frame = test.loc[
+                :, ["State", "commodity", "Year", "target_year", TARGET_COLUMN]
+            ].assign(model=model_name, prediction=np.asarray(prediction, dtype=float))
+            prediction_frames.append(_add_intervals(frame, model_name, None, x_test))
+
+        commodity_dir = by_commodity_dir / safe_path_component(commodity)
+        commodity_dir.mkdir(parents=True, exist_ok=True)
+        model_artifacts[commodity] = {}
+
+        for model_name, pipeline in build_models(args.random_state).items():
+            pipeline.fit(x_train, y_train)
+
+            prediction = pipeline.predict(x_test)
+            frame = test.loc[
+                :, ["State", "commodity", "Year", "target_year", TARGET_COLUMN]
+            ].assign(model=model_name, prediction=prediction)
+            prediction_frames.append(_add_intervals(frame, model_name, pipeline, x_test))
+            importance_frames.append(extract_feature_importance(model_name, pipeline, commodity))
+
+            model_path = commodity_dir / f"{model_name}.joblib"
+            joblib.dump(pipeline, model_path)
+            model_artifacts[commodity][model_name] = str(model_path)
+
+    if not prediction_frames:
+        raise ValueError("No commodity had enough rows for the requested train/test split.")
 
     predictions = pd.concat(prediction_frames, ignore_index=True)
     metrics = evaluate_predictions(predictions)
 
-    # Empirical coverage check per model
+    # Empirical coverage check per model and per commodity/model
     coverage: dict[str, Any] = {}
     for model_name, model_df in predictions.groupby("model"):
         coverage[model_name] = check_interval_coverage(
+            model_df[TARGET_COLUMN].to_numpy(),
+            model_df["pi_80_lower"].to_numpy(),
+            model_df["pi_80_upper"].to_numpy(),
+            model_df["pi_95_lower"].to_numpy(),
+            model_df["pi_95_upper"].to_numpy(),
+        )
+    coverage_by_commodity: dict[str, Any] = {}
+    for (commodity, model_name), model_df in predictions.groupby(["commodity", "model"]):
+        coverage_by_commodity.setdefault(commodity, {})[model_name] = check_interval_coverage(
             model_df[TARGET_COLUMN].to_numpy(),
             model_df["pi_80_lower"].to_numpy(),
             model_df["pi_80_upper"].to_numpy(),
@@ -300,19 +348,25 @@ def train_and_evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "input_path": args.input,
         "feature_output_path": args.features_output,
+        "training_strategy": "per_commodity",
         "train_end_year": args.train_end_year,
         "test_start_year": args.test_start_year,
-        "train_rows": int(len(train)),
-        "test_rows": int(len(test)),
+        "train_rows": int(sum(train_rows_by_commodity.values())),
+        "test_rows": int(sum(test_rows_by_commodity.values())),
+        "train_rows_by_commodity": train_rows_by_commodity,
+        "test_rows_by_commodity": test_rows_by_commodity,
         "target": TARGET_COLUMN,
         "features": feature_columns,
         "models_trained": sorted(set(predictions["model"])),
+        "model_artifacts": model_artifacts,
+        "skipped_commodities": skipped_commodities,
         "best_model_by_mae": best_model,
         "best_model_by_rmse": best_model_by_rmse,
         "best_ml_model_by_mae": best_ml_model_by_mae,
         "best_ml_model_by_rmse": best_ml_model_by_rmse,
         "metrics": metrics,
         "interval_coverage": coverage,
+        "interval_coverage_by_commodity": coverage_by_commodity,
     }
 
     metrics_path = output_dir / "model_metrics.json"

@@ -10,7 +10,7 @@ The modeling layer demonstrates a practical data science workflow:
 - leakage-aware feature engineering
 - time-based train/test split (no random splitting)
 - comparison against meaningful baselines before claiming ML value
-- Random Forest and XGBoost model training
+- commodity-specific Random Forest and XGBoost model training
 - prediction intervals with empirical coverage checks
 - model evaluation by overall error and commodity-level error
 - feature importance review
@@ -80,8 +80,8 @@ Test rows: 518
 |---|---|
 | Previous-year baseline | Predicts next year equals current year. |
 | Rolling 3-year baseline | Predicts next year equals current 3-year rolling average. |
-| Random Forest | 350-tree ensemble trained on log-transformed target. |
-| XGBoost | Gradient boosting model trained on log-transformed target. |
+| Random Forest | Commodity-specific 350-tree ensemble trained on log-transformed target. |
+| XGBoost | Commodity-specific gradient boosting model trained on log-transformed target. |
 
 ## Overall Results
 
@@ -89,8 +89,8 @@ Test rows: 518
 |---|---:|---:|---:|---:|
 | Previous-year baseline | 53,547,189 | 145,148,329 | 14.48% | 0.999 |
 | Rolling 3-year baseline | 91,395,960 | 253,803,495 | 14.18% | 0.998 |
-| Random Forest | 97,540,339 | 300,300,565 | 15.88% | 0.997 |
-| XGBoost | 121,203,239 | 579,835,466 | 12.52% | 0.990 |
+| Random Forest | 95,637,996 | 299,652,379 | 13.07% | 0.997 |
+| XGBoost | 91,818,392 | 288,924,673 | 12.78% | 0.998 |
 
 ## Interpretation
 
@@ -100,21 +100,20 @@ is hard to beat on aggregate. An ML model that claims to beat this baseline
 without carefully decomposing the error by commodity and time period is likely
 overstating its value.
 
-**Random Forest is the strongest ML model** by MAE and RMSE but does not beat
-the persistence baseline on this split. The top features confirm why: current
-production, 3-year rolling mean, 5-year rolling mean, and previous-year
-production dominate importance. The model is mostly learning persistence and
-recent trend, which the baseline already captures directly.
+**Commodity-specific XGBoost is now the strongest ML model** by MAE, RMSE,
+and MAPE, but it still does not beat the persistence baseline on this split.
+This is a stronger modeling design than the earlier global model because each
+commodity gets its own fitted pipeline and residual pattern.
 
-**XGBoost produces the lowest MAPE** (12.5%) but the highest RMSE, indicating
-it handles percentage-scale errors better on smaller commodities (Honey, Coffee)
-while being less accurate on Milk's large absolute values. More commodity-
-specific tuning would be needed before drawing conclusions.
+**Random Forest improved after the split** and remains useful because its
+tree-quantile intervals are easy to explain. The top features still confirm
+that current production, rolling means, and lagged production dominate model
+behavior.
 
-The appropriate next step is **commodity-specific modeling**: a Milk-only or
-Cheese-only model trained on only that commodity's state histories, with a
-longer test window, would give a fairer picture of whether ML adds value over
-the persistence baseline for high-volume commodities.
+The important portfolio takeaway is that the project now demonstrates an
+iterative modeling workflow: start with a global benchmark, identify
+cross-commodity scale problems, then move to commodity-specific models while
+still comparing against simple baselines.
 
 ## Top Random Forest Features
 
@@ -148,16 +147,15 @@ These are computed post-hoc on the same test rows.
 
 | Model | Nominal 80% | Actual 80% | Nominal 95% | Actual 95% |
 |---|---:|---:|---:|---:|
-| Persistence baseline | 80% | 91.9% | 95% | 95.4% |
-| Rolling 3-year baseline | 80% | 92.1% | 95% | 94.8% |
-| Random Forest | 80% | 82.6% | 95% | 96.3% |
-| XGBoost | 80% | 96.7% | 95% | 97.7% |
+| Persistence baseline | 80% | 90.2% | 95% | 93.8% |
+| Rolling 3-year baseline | 80% | 88.6% | 95% | 92.9% |
+| Random Forest | 80% | 76.8% | 95% | 90.5% |
+| XGBoost | 80% | 90.2% | 95% | 92.9% |
 
-The Random Forest 80% interval is closest to nominal coverage (82.6% vs 80%),
-which is expected for tree-quantile intervals. The baselines and XGBoost are
-over-covered because their residual std is inflated by Milk's large absolute
-errors. Both are conservative (wider than needed), meaning they are honest but
-imprecise on lower-production commodities.
+The Random Forest intervals are now slightly under-covered after splitting
+models by commodity, while XGBoost residual-normal intervals are still
+conservative. This is a useful next diagnostic: commodity-specific models
+improve point accuracy, but interval calibration still needs refinement.
 
 **Per-commodity interval width varies significantly.** Milk has small MAPE
 (5%) but enormous absolute residuals, so its intervals are wide in absolute
@@ -179,12 +177,13 @@ models/latest_forecasts.csv
 |---|---|
 | `latest_observed_year` | Most recent year with USDA data for this pair |
 | `forecast_year` | `latest_observed_year + 1` |
-| `forecast_production` | Random Forest point forecast |
-| `pi_80_lower/upper` | 80% tree-quantile prediction interval |
-| `pi_95_lower/upper` | 95% tree-quantile prediction interval |
+| `model` | Forecasting model, currently Random Forest or XGBoost |
+| `forecast_production` | Model point forecast |
+| `pi_80_lower/upper` | 80% prediction interval |
+| `pi_95_lower/upper` | 95% prediction interval |
 | `forecast_generated_at` | UTC timestamp of this run |
 
-**Important caveat:** the Random Forest was trained on target years ≤ 2018.
+**Important caveat:** the ML models were trained on target years ≤ 2018.
 For pairs with a latest observed year of 2023, the forward forecast is a
 5-year extrapolation beyond the test window. Treat these as directional
 estimates, not calibrated predictions.
@@ -225,8 +224,8 @@ dominates this table.
 | `models/model_metrics.json` | Metrics, coverage rates, and training metadata |
 | `models/feature_importance.csv` | RF and XGBoost feature importances |
 | `models/test_predictions.csv` | Backtest rows with predictions and intervals |
-| `models/random_forest.joblib` | Fitted RF pipeline (used by generate_forecasts.py) |
-| `models/xgboost.joblib` | Fitted XGBoost pipeline |
+| `models/by_commodity/<commodity>/random_forest.joblib` | Commodity-specific RF pipeline |
+| `models/by_commodity/<commodity>/xgboost.joblib` | Commodity-specific XGBoost pipeline |
 | `models/latest_forecasts.csv` | Forward forecasts from latest observed year |
 
 ## Reproduce
@@ -257,10 +256,9 @@ python src/build_features.py
 
 ## Next Improvements
 
-- **Commodity-specific models**: train separate models per commodity to
-  eliminate cross-commodity noise. A Milk-only model with per-state temporal
-  cross-validation is the most promising path to beating the persistence
-  baseline on a high-volume commodity.
+- **Commodity-specific hyperparameter tuning**: tune Random Forest and XGBoost
+  separately for Milk, Cheese, Honey, Coffee, and Yogurt instead of sharing one
+  parameter set.
 - **SHAP values**: add a SHAP analysis to quantify each feature's marginal
   contribution per prediction, moving beyond global importance scores.
 - **Calibrated intervals**: use isotonic regression or a dedicated calibration

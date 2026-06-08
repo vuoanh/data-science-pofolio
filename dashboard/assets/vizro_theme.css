@@ -64,7 +64,6 @@ body {
   min-width: 0;
 }
 
-.brand-chip,
 .filter-badge,
 .header-stat {
   display: inline-flex;
@@ -80,9 +79,11 @@ body {
   font-weight: 720;
 }
 
-.brand-chip {
-  margin-bottom: 9px;
-  color: var(--viz-accent);
+.usda-logo {
+  display: block;
+  width: 86px;
+  height: auto;
+  margin-bottom: 10px;
 }
 
 .app-title {
@@ -161,7 +162,7 @@ body {
 }
 
 .theme-switch-shell {
-  width: 108px;
+  width: 104px;
 }
 
 .theme-switch-shell > div > span {
@@ -169,6 +170,7 @@ body {
   grid-template-columns: 18px 48px 18px;
   align-items: center;
   column-gap: 8px;
+  width: 104px;
 }
 
 .theme-switch-shell .fa {
@@ -183,13 +185,23 @@ body {
   line-height: 1;
 }
 
-.theme-switch-shell .theme-toggle-switch {
+.theme-switch-shell > div > span > .fa:first-child {
+  grid-column: 1;
+}
+
+.theme-switch-shell > div > span > .theme-toggle-switch {
+  grid-column: 2;
   display: flex !important;
   align-items: center;
   justify-content: center;
-  min-height: 20px;
+  width: 48px;
+  min-height: 24px;
   margin: 0 !important;
   padding-left: 0;
+}
+
+.theme-switch-shell > div > span > .fa:last-child {
+  grid-column: 3;
 }
 
 .theme-switch-shell .form-check-input {
@@ -198,24 +210,6 @@ body {
   height: 24px;
   margin: 0;
   cursor: pointer;
-}
-
-.commodity-checklist {
-  display: grid;
-  gap: 6px;
-}
-
-.commodity-checklist .form-check {
-  display: flex;
-  align-items: center;
-  min-height: 24px;
-  margin: 0;
-}
-
-.commodity-checklist .form-check-label {
-  color: var(--viz-text);
-  font-size: 13px;
-  font-weight: 560;
 }
 
 .form-check-input {

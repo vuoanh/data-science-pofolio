@@ -8,7 +8,7 @@ forward forecasts, and model validation results.
 Features:
 ---------
 - Overview tab with business KPI cards and production trends
-- State Trends tab for selected-state production patterns
+- State Rankings tab for all-state production benchmarking
 - Forecasts tab backed by latest per-state/commodity forecasts
 - Model Validation tab for actual vs predicted performance review
 - Filterable data table with CSV export
@@ -75,7 +75,6 @@ if FORECASTS_PATH.exists():
         if col in forecasts_df:
             forecasts_df[col] = forecasts_df[col].clip(lower=0)
 
-states = sorted(df["State"].dropna().unique())
 commodities = sorted(df["commodity"].dropna().unique())
 min_year = int(df["Year"].min())
 max_year = int(df["Year"].max())
@@ -132,8 +131,15 @@ app.title = "USDA Commodity Production"
 # Helpers
 # ---------------------------------------------------------------------------
 
-DEFAULT_STATES = ["CALIFORNIA", "WISCONSIN", "NEW YORK"]
-DEFAULT_COMMODITIES = ["Yogurt", "Honey"]
+DEFAULT_COMMODITY = "Milk" if "Milk" in commodities else commodities[0]
+
+
+def _commodity_list(selected_commodity: str | list[str] | None) -> list[str]:
+    if isinstance(selected_commodity, list):
+        return selected_commodity or [DEFAULT_COMMODITY]
+    if selected_commodity:
+        return [selected_commodity]
+    return [DEFAULT_COMMODITY]
 
 
 def _model_options() -> list[dict]:
@@ -145,6 +151,8 @@ def _compact_number(value: float | int | None) -> str:
         return "-"
     value = float(value)
     abs_value = abs(value)
+    if abs_value >= 1_000_000_000_000:
+        return f"{value / 1_000_000_000_000:.1f}T"
     if abs_value >= 1_000_000_000:
         return f"{value / 1_000_000_000:.1f}B"
     if abs_value >= 1_000_000:
@@ -297,47 +305,36 @@ def _graph(graph_id: str, height: int = 360) -> dcc.Graph:
 
 def _filter_raw(
     year_range: list[int] | None,
-    selected_commodities: list[str] | None,
-    selected_states: list[str] | None = None,
+    selected_commodity: str | list[str] | None,
 ) -> pd.DataFrame:
-    commodities_sel = selected_commodities or DEFAULT_COMMODITIES
+    commodities_sel = _commodity_list(selected_commodity)
     filtered = df[df["commodity"].isin(commodities_sel)].copy()
     if year_range:
         filtered = filtered[(filtered["Year"] >= year_range[0]) & (filtered["Year"] <= year_range[1])]
-    if selected_states:
-        filtered = filtered[filtered["State"].isin(selected_states)]
     return filtered.dropna(subset=["total_production"])
 
 
-def _filter_predictions(model: str | None, commodities_sel: list[str] | None, states_sel: list[str] | None) -> pd.DataFrame:
+def _filter_predictions(model: str | None, selected_commodity: str | list[str] | None) -> pd.DataFrame:
     if predictions_df.empty or not model:
         return pd.DataFrame()
     filtered = predictions_df[predictions_df["model"] == model].copy()
-    if commodities_sel:
-        filtered = filtered[filtered["commodity"].isin(commodities_sel)]
-    if states_sel:
-        filtered = filtered[filtered["State"].isin(states_sel)]
+    filtered = filtered[filtered["commodity"].isin(_commodity_list(selected_commodity))]
     return filtered
 
 
-def _filter_forecasts(model: str | None, commodities_sel: list[str] | None, states_sel: list[str] | None) -> pd.DataFrame:
+def _filter_forecasts(model: str | None, selected_commodity: str | list[str] | None) -> pd.DataFrame:
     if forecasts_df.empty or not model:
         return pd.DataFrame()
     filtered = forecasts_df[forecasts_df["model"] == model].copy()
-    if commodities_sel:
-        filtered = filtered[filtered["commodity"].isin(commodities_sel)]
-    if states_sel:
-        filtered = filtered[filtered["State"].isin(states_sel)]
+    filtered = filtered[filtered["commodity"].isin(_commodity_list(selected_commodity))]
     return filtered
 
 
 def _apply_table_filters(
-    selected_states: list[str] | None,
     year_range: list[int],
-    selected_commodities: list[str] | None,
+    selected_commodity: str | list[str] | None,
 ) -> pd.DataFrame:
-    states_sel = selected_states or DEFAULT_STATES
-    filtered = _filter_raw(year_range, selected_commodities, states_sel)
+    filtered = _filter_raw(year_range, selected_commodity)
     return filtered.sort_values(["State", "Year", "commodity"], ascending=[True, False, True])
 
 
@@ -382,7 +379,11 @@ app.layout = html.Div(
                     [
                         html.Div(
                             [
-                                html.Div("USDA", className="brand-chip"),
+                                html.Img(
+                                    src=app.get_asset_url("usda-logo.svg"),
+                                    alt="USDA logo",
+                                    className="usda-logo",
+                                ),
                                 html.H1("USDA Commodity Production", className="app-title"),
                                 html.P(
                                     "Production intelligence, forward forecasts, and model validation for agricultural commodities.",
@@ -416,7 +417,11 @@ app.layout = html.Div(
                                     [
                                         html.Label("Theme", className="control-label"),
                                         html.Div(
-                                            ThemeSwitchAIO(aio_id="theme", themes=[url_theme1, url_theme2]),
+                                            ThemeSwitchAIO(
+                                                aio_id="theme",
+                                                themes=[url_theme1, url_theme2],
+                                                switch_props={"className": "theme-toggle-switch"},
+                                            ),
                                             className="theme-switch-shell",
                                         ),
                                     ],
@@ -425,12 +430,12 @@ app.layout = html.Div(
                                 html.Div(
                                     [
                                         html.Label("Commodity", className="control-label"),
-                                        dbc.Checklist(
-                                            id="commodity-checklist",
+                                        dcc.Dropdown(
+                                            id="commodity-selector",
                                             options=[{"label": c, "value": c} for c in commodities],
-                                            value=DEFAULT_COMMODITIES,
-                                            inline=False,
-                                            className="commodity-checklist",
+                                            value=DEFAULT_COMMODITY,
+                                            clearable=False,
+                                            className="viz-dropdown commodity-selector",
                                         ),
                                     ],
                                     className="filter-section",
@@ -447,20 +452,6 @@ app.layout = html.Div(
                                             step=1,
                                             tooltip={"placement": "bottom", "always_visible": False},
                                             className="year-slider",
-                                        ),
-                                    ],
-                                    className="filter-section",
-                                ),
-                                html.Div(
-                                    [
-                                        html.Label("State", className="control-label"),
-                                        dcc.Dropdown(
-                                            id="state-dropdown",
-                                            options=[{"label": s.title(), "value": s} for s in states],
-                                            value=DEFAULT_STATES,
-                                            multi=True,
-                                            placeholder="Select states",
-                                            className="viz-dropdown",
                                         ),
                                     ],
                                     className="filter-section",
@@ -527,7 +518,7 @@ app.layout = html.Div(
                                                                 _viz_card(
                                                                     "Production Trend",
                                                                     _graph("line-chart", 420),
-                                                                    "Annual production by selected commodities",
+                                                                    "Annual production by selected commodity",
                                                                 ),
                                                                 lg=8,
                                                             ),
@@ -570,7 +561,7 @@ app.layout = html.Div(
                                         ],
                                     ),
                                     dbc.Tab(
-                                        label="State Trends",
+                                        label="State Rankings",
                                         tab_id="state-trends-tab",
                                         tabClassName="dashboard-tab",
                                         activeTabClassName="dashboard-tab-active",
@@ -581,17 +572,17 @@ app.layout = html.Div(
                                                         [
                                                             dbc.Col(
                                                                 _viz_card(
-                                                                    "Selected State Trends",
+                                                                    "State Production Ranking",
                                                                     _graph("state-trend-chart", 430),
-                                                                    "Annual production by selected states",
+                                                                    "All states in the most recent selected year",
                                                                 ),
                                                                 lg=7,
                                                             ),
                                                             dbc.Col(
                                                                 _viz_card(
-                                                                    "Commodity Mix",
+                                                                    "National Share by State",
                                                                     _graph("state-mix-chart", 430),
-                                                                    "Selected states in the latest year",
+                                                                    "Top states as share of selected commodity production",
                                                                 ),
                                                                 lg=5,
                                                             ),
@@ -824,11 +815,11 @@ def update_shell_theme(toggle):
     Output("overview-accuracy", "children"),
     Output("overview-accuracy-meta", "children"),
     Input("year-slider", "value"),
-    Input("commodity-checklist", "value"),
+    Input("commodity-selector", "value"),
     Input("model-selector", "value"),
 )
-def update_overview_metrics(year_range, selected_commodities, selected_model):
-    filtered = _filter_raw(year_range, selected_commodities)
+def update_overview_metrics(year_range, selected_commodity, selected_model):
+    filtered = _filter_raw(year_range, selected_commodity)
     if filtered.empty:
         return "-", "No production rows", "-", "No comparison year", "-", "No ranked state", "-", "No validation rows"
 
@@ -844,7 +835,7 @@ def update_overview_metrics(year_range, selected_commodities, selected_model):
     top_state = top_state_series.index[0].title() if not top_state_series.empty else "-"
     top_state_value = top_state_series.iloc[0] if not top_state_series.empty else np.nan
 
-    prediction_rows = _filter_predictions(selected_model, selected_commodities, None)
+    prediction_rows = _filter_predictions(selected_model, selected_commodity)
     if prediction_rows.empty:
         accuracy = "-"
         accuracy_meta = "No validation rows"
@@ -868,12 +859,12 @@ def update_overview_metrics(year_range, selected_commodities, selected_model):
 @callback(
     Output("line-chart", "figure"),
     Input("year-slider", "value"),
-    Input("commodity-checklist", "value"),
+    Input("commodity-selector", "value"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
 )
-def update_line_chart(year_range, selected_commodities, toggle):
+def update_line_chart(year_range, selected_commodity, toggle):
     filtered = (
-        _filter_raw(year_range, selected_commodities)
+        _filter_raw(year_range, selected_commodity)
         .groupby(["commodity", "Year"], as_index=False)["total_production"]
         .sum()
     )
@@ -896,14 +887,14 @@ def update_line_chart(year_range, selected_commodities, toggle):
 @callback(
     Output("bar-chart", "figure"),
     Input("year-slider", "value"),
-    Input("commodity-checklist", "value"),
+    Input("commodity-selector", "value"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
 )
-def update_bar_chart(year_range, selected_commodities, toggle):
-    commodities_sel = selected_commodities or DEFAULT_COMMODITIES
+def update_bar_chart(year_range, selected_commodity, toggle):
+    commodities_sel = _commodity_list(selected_commodity)
     available = df[df["commodity"].isin(commodities_sel)]
     if available.empty:
-        return _empty_figure("No production rows for the selected commodities", toggle)
+        return _empty_figure("No production rows for the selected commodity", toggle)
 
     selected_year = min(int(year_range[1]), int(available["Year"].max()))
     filtered = (
@@ -940,45 +931,37 @@ def update_bar_chart(year_range, selected_commodities, toggle):
 @callback(
     Output("state-trend-chart", "figure"),
     Output("state-mix-chart", "figure"),
-    Input("state-dropdown", "value"),
     Input("year-slider", "value"),
-    Input("commodity-checklist", "value"),
+    Input("commodity-selector", "value"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
 )
-def update_state_trends(selected_states, year_range, selected_commodities, toggle):
-    states_sel = selected_states or DEFAULT_STATES
-    filtered = _filter_raw(year_range, selected_commodities, states_sel)
+def update_state_trends(year_range, selected_commodity, toggle):
+    filtered = _filter_raw(year_range, selected_commodity)
     if filtered.empty:
-        empty = _empty_figure("No production rows for selected states", toggle)
+        empty = _empty_figure("No production rows for selected filters", toggle)
         return empty, empty
 
-    trend = (
-        filtered.groupby(["State", "commodity", "Year"], as_index=False)["total_production"]
-        .sum()
-        .sort_values("Year")
-    )
-    trend["State"] = trend["State"].str.title()
-    fig_trend = px.line(
-        trend,
-        x="Year",
-        y="total_production",
-        color="State",
-        line_dash="commodity",
-        labels={"Year": "Year", "total_production": "Production (LB)", "State": "State", "commodity": "Commodity"},
-        markers=True,
-    )
-    fig_trend.update_traces(marker={"size": 5}, line={"width": 2.2})
-
     latest_year = int(filtered["Year"].max())
-    mix = (
+    latest = (
         filtered[filtered["Year"] == latest_year]
         .groupby(["State", "commodity"], as_index=False)["total_production"]
         .sum()
     )
-    mix["State"] = mix["State"].str.title()
-    order = mix.groupby("State")["total_production"].sum().sort_values(ascending=True).index.tolist()
-    fig_mix = px.bar(
-        mix,
+    if latest.empty:
+        empty = _empty_figure(f"No production rows in {latest_year}", toggle)
+        return empty, empty
+
+    top_states = latest.groupby("State")["total_production"].sum().nlargest(15).index
+    ranking = latest[latest["State"].isin(top_states)].copy()
+    ranking["State"] = ranking["State"].str.title()
+    ranking_order = (
+        ranking.groupby("State")["total_production"]
+        .sum()
+        .sort_values(ascending=True)
+        .index.tolist()
+    )
+    fig_ranking = px.bar(
+        ranking,
         x="total_production",
         y="State",
         color="commodity",
@@ -986,31 +969,78 @@ def update_state_trends(selected_states, year_range, selected_commodities, toggl
         orientation="h",
         labels={"total_production": "Production (LB)", "State": "State", "commodity": "Commodity"},
     )
-    fig_mix.update_layout(barmode="stack", yaxis={"categoryorder": "array", "categoryarray": order})
+    fig_ranking.update_layout(
+        barmode="stack",
+        yaxis={"categoryorder": "array", "categoryarray": ranking_order},
+    )
 
-    return _polish_figure(fig_trend, toggle, height=405), _polish_figure(fig_mix, toggle, height=405)
+    share = (
+        latest.groupby("State", as_index=False)["total_production"]
+        .sum()
+        .sort_values("total_production", ascending=False)
+    )
+    top_share = share.head(10).copy()
+    other_total = share.iloc[10:]["total_production"].sum()
+    if other_total > 0:
+        top_share = pd.concat(
+            [
+                top_share,
+                pd.DataFrame([{"State": "Other states", "total_production": other_total}]),
+            ],
+            ignore_index=True,
+        )
+    top_share["State"] = top_share["State"].str.title()
+    fig_share = px.pie(
+        top_share,
+        names="State",
+        values="total_production",
+        hole=0.56,
+        color_discrete_sequence=[
+            "#0F766E",
+            "#2563EB",
+            "#D97706",
+            "#7C3AED",
+            "#0891B2",
+            "#65A30D",
+            "#DB2777",
+            "#475569",
+            "#14B8A6",
+            "#F59E0B",
+            "#CBD5E1",
+        ],
+    )
+    fig_share.update_traces(
+        textinfo="percent",
+        textposition="inside",
+        hovertemplate="State=%{label}<br>Production=%{value:,.0f} LB<br>Share=%{percent}<extra></extra>",
+    )
+    fig_share = _polish_figure(fig_share, toggle, height=405)
+    fig_share.update_layout(
+        legend={"orientation": "v", "yanchor": "middle", "y": 0.5, "xanchor": "left", "x": 1.02},
+        margin={"l": 10, "r": 112, "t": 16, "b": 16},
+    )
+
+    return _polish_figure(fig_ranking, toggle, height=405), fig_share
 
 
 @callback(
     Output("data-table", "rowData"),
-    Input("state-dropdown", "value"),
     Input("year-slider", "value"),
-    Input("commodity-checklist", "value"),
+    Input("commodity-selector", "value"),
 )
-def update_table(selected_states, year_range, selected_commodities):
-    return _apply_table_filters(selected_states, year_range, selected_commodities).to_dict("records")
+def update_table(year_range, selected_commodity):
+    return _apply_table_filters(year_range, selected_commodity).to_dict("records")
 
 
 @callback(
     Output("download-csv", "data"),
     Input("download-btn", "n_clicks"),
-    State("state-dropdown", "value"),
     State("year-slider", "value"),
-    State("commodity-checklist", "value"),
+    State("commodity-selector", "value"),
     prevent_initial_call=True,
 )
-def download_csv(_n_clicks, selected_states, year_range, selected_commodities):
-    filtered = _apply_table_filters(selected_states, year_range, selected_commodities)
+def download_csv(_n_clicks, year_range, selected_commodity):
+    filtered = _apply_table_filters(year_range, selected_commodity)
     return dcc.send_data_frame(filtered.to_csv, "usda_production_filtered_data.csv", index=False)
 
 
@@ -1032,13 +1062,12 @@ def download_csv(_n_clicks, selected_states, year_range, selected_commodities):
     Output("forecast-interval-width-meta", "children"),
     Output("latest-forecasts-table", "rowData"),
     Input("model-selector", "value"),
-    Input("commodity-checklist", "value"),
-    Input("state-dropdown", "value"),
+    Input("commodity-selector", "value"),
     Input("year-slider", "value"),
     Input("interval-selector", "value"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
 )
-def update_forecasts(selected_model, selected_commodities, selected_states, year_range, interval, toggle):
+def update_forecasts(selected_model, selected_commodity, year_range, interval, toggle):
     lower_col = f"pi_{interval}_lower"
     upper_col = f"pi_{interval}_upper"
     empty_chart = _empty_figure("No forward forecasts for the selected filters", toggle)
@@ -1056,7 +1085,7 @@ def update_forecasts(selected_model, selected_commodities, selected_states, year
         [],
     )
 
-    filtered = _filter_forecasts(selected_model, selected_commodities, selected_states)
+    filtered = _filter_forecasts(selected_model, selected_commodity)
     if filtered.empty or lower_col not in filtered or upper_col not in filtered:
         return empty_return
 
@@ -1070,7 +1099,7 @@ def update_forecasts(selected_model, selected_commodities, selected_states, year
         np.nan,
     )
 
-    hist = _filter_raw(year_range, selected_commodities, selected_states)
+    hist = _filter_raw(year_range, selected_commodity)
     hist_agg = hist.groupby("Year", as_index=False)["total_production"].sum().sort_values("Year")
 
     forecast_agg = (
@@ -1236,15 +1265,14 @@ def update_forecasts(selected_model, selected_commodities, selected_states, year
     Output("metric-r2-meta", "children"),
     Output("misses-table", "rowData"),
     Input("model-selector", "value"),
-    Input("commodity-checklist", "value"),
-    Input("state-dropdown", "value"),
+    Input("commodity-selector", "value"),
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
 )
-def update_model_validation(selected_model, selected_commodities, selected_states, toggle):
+def update_model_validation(selected_model, selected_commodity, toggle):
     empty = _empty_figure("No model predictions available", toggle)
     no_data = (empty, empty, empty, "-", "No rows", "-", "No rows", "-", "No rows", "-", "No rows", [])
 
-    filtered = _filter_predictions(selected_model, selected_commodities, selected_states)
+    filtered = _filter_predictions(selected_model, selected_commodity)
     if filtered.empty:
         return no_data
 
