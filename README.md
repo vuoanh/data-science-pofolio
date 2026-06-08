@@ -1,5 +1,7 @@
 # USDA Commodity Production Analytics Portfolio
 
+[![CI](https://github.com/vuoanh/data-science-pofolio/actions/workflows/ci.yml/badge.svg)](https://github.com/vuoanh/data-science-pofolio/actions/workflows/ci.yml)
+
 This project analyzes USDA agricultural production data from 1930-2023 using
 SQLite, SQL, Python, machine learning, and Dash. The goal is to demonstrate an
 end-to-end analytics workflow: USDA bulk-data ingestion, relational data
@@ -107,7 +109,6 @@ Modeling artifacts:
 - [`src/train_model.py`](src/train_model.py)
 - [`src/generate_forecasts.py`](src/generate_forecasts.py)
 - [`src/evaluate_model.py`](src/evaluate_model.py)
-- [`notebooks/01_forecasting_model.ipynb`](notebooks/01_forecasting_model.ipynb)
 - [`docs/forecasting_model_summary.md`](docs/forecasting_model_summary.md)
 
 Dashboard-facing outputs:
@@ -197,14 +198,20 @@ data-science-USDA-commodities/
 │       ├── honey/
 │       ├── milk/
 │       └── yogurt/
-├── notebooks/
-│   └── 01_forecasting_model.ipynb
 ├── src/
 │   ├── build_features.py
 │   ├── evaluate_model.py
 │   ├── generate_forecasts.py
 │   ├── refresh_usda_bulk_data.py
 │   └── train_model.py
+├── tests/
+│   ├── conftest.py
+│   ├── test_build_features.py
+│   ├── test_evaluate_model.py
+│   └── test_generate_forecasts.py
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── SQL/
 │   ├── project-USDA.sqlite
 │   ├── 00_schema.sql
@@ -291,6 +298,33 @@ python app.py
 ```
 
 Open `http://localhost:1234`.
+
+## Testing
+
+The forecasting pipeline is covered by a `pytest` suite that pins the
+contracts most prone to silent breakage:
+
+- **Leakage guard** — every training row's `target_year` must equal `Year + 1`;
+  multi-year gaps are excluded so the model only learns true one-year-ahead
+  forecasts.
+- **Feature correctness** — lag, rolling-mean, and target values are checked
+  against hand-computed series.
+- **Forward features** — exactly one row per state/commodity at its latest year,
+  with no target column leaking in.
+- **Metrics and intervals** — MAE/RMSE/MAPE/R2, residual and tree-quantile
+  prediction intervals, and empirical coverage math.
+- **Recency filter** — states that exited production are dropped from forward
+  forecasts.
+
+Install dev dependencies and run the suite:
+
+```bash
+python -m pip install -r requirements-dev.txt
+pytest
+```
+
+Tests run automatically on every push and pull request via GitHub Actions
+(`.github/workflows/ci.yml`) on Python 3.11 and 3.12.
 
 ## Dashboard Features
 
