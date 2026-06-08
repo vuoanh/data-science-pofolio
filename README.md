@@ -5,15 +5,9 @@ SQLite, SQL, Python, and Dash. The goal is to demonstrate end-to-end structured
 data analysis: relational data modeling, data cleaning, SQL querying, trend
 analysis, state-level ranking, and dashboard reporting.
 
-## Dashboard Screenshots
+## Dashboard Preview
 
-### Light Theme
-
-![Dashboard Light Theme](dashboard_light.png)
-
-### Dark Theme
-
-![Dashboard Dark Theme](dashboard_dark.png)
+![USDA commodity production dashboard preview](dashboard_preview.gif)
 
 ## How To Review This Project
 
@@ -138,8 +132,7 @@ isolation.
 data-science-USDA-commodities/
 ├── README.md
 ├── requirements.txt
-├── dashboard_light.png
-├── dashboard_dark.png
+├── dashboard_preview.gif
 ├── data/
 │   ├── raw/
 │   │   └── usda_quickstats_bulk_1930_2023_project_production.csv

@@ -386,7 +386,7 @@ app.layout = html.Div(
                                     alt="USDA logo",
                                     className="usda-logo",
                                 ),
-                                html.H1("USDA Commodity Production", className="app-title"),
+                                html.H1("Commodity Production", className="app-title"),
                                 html.P(
                                     "Production intelligence, forward forecasts, and model validation for agricultural commodities.",
                                     className="app-subtitle",
@@ -397,7 +397,6 @@ app.layout = html.Div(
                         html.Div(
                             [
                                 html.Div("1930-" + str(max_year), className="header-stat"),
-                                html.Div("LB units", className="header-stat"),
                             ],
                             className="header-meta",
                         ),
@@ -460,7 +459,7 @@ app.layout = html.Div(
                                 ),
                                 html.Div(
                                     [
-                                        html.Label("Model", className="control-label"),
+                                        html.Label("ML Model", className="control-label"),
                                         dcc.Dropdown(
                                             id="model-selector",
                                             options=_model_options(),
@@ -474,7 +473,7 @@ app.layout = html.Div(
                                 ),
                                 html.Div(
                                     [
-                                        html.Label("Interval", className="control-label"),
+                                        html.Label("Confidence Interval", className="control-label"),
                                         dcc.RadioItems(
                                             id="interval-selector",
                                             options=[
