@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 146 100" role="img" aria-labelledby="title desc">
+  <title id="title">USDA logo</title>
+  <desc id="desc">USDA wordmark with dark blue lettering and green and blue land-and-water curves.</desc>
+  <rect width="146" height="100" fill="#ffffff"/>
+  <text
+    x="3"
+    y="45"
+    fill="#002D72"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="45"
+    font-weight="700"
+    letter-spacing="-2.8"
+  >USDA</text>
+  <path
+    d="M0 72 C24 55 50 52 78 58 C103 64 125 64 146 53 L146 70 C121 82 96 82 69 75 C42 68 20 70 0 84 Z"
+    fill="#005440"
+  />
+  <path
+    d="M0 86 C28 68 58 64 88 71 C111 77 130 75 146 66 L146 79 C124 91 96 93 68 86 C41 80 19 82 0 96 Z"
+    fill="#002D72"
+  />
+</svg>

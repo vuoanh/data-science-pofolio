@@ -5,15 +5,9 @@ SQLite, SQL, Python, and Dash. The goal is to demonstrate end-to-end structured
 data analysis: relational data modeling, data cleaning, SQL querying, trend
 analysis, state-level ranking, and dashboard reporting.
 
-## Dashboard Screenshots
+## Dashboard Preview
 
-### Light Theme
-
-![Dashboard Light Theme](dashboard_light.png)
-
-### Dark Theme
-
-![Dashboard Dark Theme](dashboard_dark.png)
+![USDA commodity production dashboard preview](dashboard_preview.gif)
 
 ## How To Review This Project
 
@@ -77,7 +71,9 @@ The SQL modules answer questions such as:
 ## Forecasting Model
 
 The project includes a supervised forecasting layer that predicts next-year
-production for each `State` and `commodity` pair.
+production for each `State` and `commodity` pair. Random Forest and XGBoost
+are now trained as separate commodity-specific models so Milk, Honey, Coffee,
+Cheese, and Yogurt no longer share one global error pattern.
 
 Modeling artifacts:
 
@@ -101,13 +97,14 @@ years are `>= 2019`.
 |---|---:|---:|---:|---:|
 | Previous-year baseline | 53,547,189 | 145,148,329 | 14.48% | 0.999 |
 | Rolling 3-year baseline | 91,395,960 | 253,803,495 | 14.18% | 0.998 |
-| Random Forest | 97,540,339 | 300,300,565 | 15.88% | 0.997 |
-| XGBoost | 121,203,239 | 579,835,466 | 12.52% | 0.990 |
+| Random Forest | 95,637,996 | 299,652,379 | 13.07% | 0.997 |
+| XGBoost | 91,818,392 | 288,924,673 | 12.78% | 0.998 |
 
-Result: the previous-year baseline is strongest by MAE and RMSE, while Random
-Forest is the strongest ML benchmark by both MAE and RMSE. This is a useful
-data science finding because annual production is highly persistent, so the ML
-models need to be judged against simple baselines rather than in isolation.
+Result: the previous-year baseline remains strongest overall by MAE and RMSE,
+but commodity-specific XGBoost is now the strongest ML benchmark. This is a
+useful data science finding because annual production is highly persistent, so
+the ML models need to be judged against simple baselines rather than in
+isolation.
 
 ## SQL Portfolio Files
 
@@ -135,8 +132,7 @@ models need to be judged against simple baselines rather than in isolation.
 data-science-USDA-commodities/
 ├── README.md
 ├── requirements.txt
-├── dashboard_light.png
-├── dashboard_dark.png
+├── dashboard_preview.gif
 ├── data/
 │   ├── raw/
 │   │   └── usda_quickstats_bulk_1930_2023_project_production.csv
@@ -155,12 +151,20 @@ data-science-USDA-commodities/
 ├── models/
 │   ├── model_metrics.json
 │   ├── feature_importance.csv
-│   └── test_predictions.csv
+│   ├── latest_forecasts.csv
+│   ├── test_predictions.csv
+│   └── by_commodity/
+│       ├── cheese/
+│       ├── coffee/
+│       ├── honey/
+│       ├── milk/
+│       └── yogurt/
 ├── notebooks/
 │   └── 01_forecasting_model.ipynb
 ├── src/
 │   ├── build_features.py
 │   ├── evaluate_model.py
+│   ├── generate_forecasts.py
 │   ├── refresh_usda_bulk_data.py
 │   └── train_model.py
 ├── SQL/

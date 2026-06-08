@@ -1,135 +1,431 @@
-model,feature,importance
-random_forest,total_production,0.1687213624445503
-random_forest,rolling_3_mean,0.1461036783409008
-random_forest,rolling_5_mean,0.13221213304941323
-random_forest,production_lag_1,0.12536761670091098
-random_forest,expanding_mean_to_date,0.10462439944185858
-random_forest,production_lag_3,0.07427628609606304
-random_forest,production_lag_2,0.0662122154940636
-random_forest,commodity_Honey,0.06343614940593018
-random_forest,commodity_Milk,0.03891713404303763
-random_forest,state_share_of_commodity,0.01722585745860091
-random_forest,production_rank_in_commodity_year,0.016007212199413905
-random_forest,years_observed_so_far,0.015860784128553976
-random_forest,Year,0.011859430103920564
-random_forest,yoy_pct_change,0.0073178380515397145
-random_forest,commodity_Cheese,0.005010288041802148
-random_forest,State_WISCONSIN,0.0008846507376332095
-random_forest,State_CALIFORNIA,0.0007209387307901552
-random_forest,State_MINNESOTA,0.0004501539253223274
-random_forest,State_RHODE ISLAND,0.0004022138637008907
-random_forest,commodity_Yogurt,0.0003398673065477169
-random_forest,State_NEW YORK,0.0003346320943391127
-random_forest,State_NORTH DAKOTA,0.0003197547688248365
-random_forest,State_DELAWARE,0.00030103671707341147
-random_forest,State_ALASKA,0.00028789557523971576
-random_forest,State_HAWAII,0.00021492369252246236
-random_forest,State_WYOMING,0.0001937576352231892
-random_forest,State_KENTUCKY,0.0001581774820676316
-random_forest,State_WEST VIRGINIA,0.00011467570229020378
-random_forest,State_OHIO,0.00011072282399796798
-random_forest,State_PENNSYLVANIA,0.00010458978574477768
-random_forest,State_SOUTH DAKOTA,0.00010018873875640663
-random_forest,State_NEVADA,9.793477017969544e-05
-random_forest,State_MICHIGAN,9.753690679144291e-05
-random_forest,State_IOWA,8.21387560740705e-05
-random_forest,State_MONTANA,7.824803987135698e-05
-random_forest,State_TEXAS,7.747875991889081e-05
-random_forest,State_MAINE,7.727287179550638e-05
-random_forest,State_INDIANA,7.430340790786785e-05
-random_forest,State_VIRGINIA,7.246072771369115e-05
-random_forest,State_VERMONT,7.211297088122774e-05
-random_forest,State_CONNECTICUT,6.886288056298079e-05
-random_forest,State_NEW JERSEY,6.669481708823783e-05
-random_forest,State_NEW HAMPSHIRE,6.55693614823954e-05
-random_forest,State_MARYLAND,6.478461094626813e-05
-random_forest,State_FLORIDA,5.751006799709837e-05
-random_forest,State_MASSACHUSETTS,5.6891113678413763e-05
-random_forest,State_TENNESSEE,4.9980186523330526e-05
-random_forest,State_GEORGIA,4.9809456630317275e-05
-random_forest,State_OKLAHOMA,4.7784321481352534e-05
-random_forest,State_LOUISIANA,4.5219612578330524e-05
-random_forest,State_MISSISSIPPI,4.287647107135593e-05
-random_forest,State_ILLINOIS,4.268286414245985e-05
-random_forest,State_SOUTH CAROLINA,4.145533138485674e-05
-random_forest,State_NORTH CAROLINA,4.057775335591466e-05
-random_forest,State_UTAH,3.914519963847896e-05
-random_forest,State_IDAHO,3.841852574819827e-05
-random_forest,State_COLORADO,3.780894646443318e-05
-random_forest,State_OREGON,3.43634773244149e-05
-random_forest,State_NEW MEXICO,3.260145688486242e-05
-random_forest,State_MISSOURI,2.817392964806929e-05
-random_forest,State_WASHINGTON,2.3948557937583485e-05
-random_forest,State_NEBRASKA,2.366508213200881e-05
-random_forest,State_ALABAMA,2.3361848564250187e-05
-random_forest,State_ARIZONA,2.2540702732351782e-05
-random_forest,State_ARKANSAS,2.0121695731128862e-05
-random_forest,State_KANSAS,1.3186754650771544e-05
-random_forest,commodity_Coffee,1.9131818525817583e-06
-xgboost,total_production,0.7066740989685059
-xgboost,rolling_3_mean,0.2569566071033478
-xgboost,rolling_5_mean,0.015983570367097855
-xgboost,production_lag_1,0.001685230410657823
-xgboost,state_share_of_commodity,0.0016039474867284298
-xgboost,State_COLORADO,0.0015978713054209948
-xgboost,expanding_mean_to_date,0.0011847730493173003
-xgboost,State_DELAWARE,0.0009945414494723082
-xgboost,commodity_Cheese,0.0008451535832136869
-xgboost,State_NEVADA,0.0006985730724409223
-xgboost,production_rank_in_commodity_year,0.00060304906219244
-xgboost,production_lag_3,0.0006014102254994214
-xgboost,production_lag_2,0.0005901590338908136
-xgboost,commodity_Honey,0.0005551171489059925
-xgboost,State_WYOMING,0.00035411881981417537
-xgboost,State_SOUTH CAROLINA,0.0003537308075465262
-xgboost,State_NEW JERSEY,0.0003333286149427295
-xgboost,State_MAINE,0.00033151576644741
-xgboost,State_LOUISIANA,0.00028628503787331283
-xgboost,Year,0.0002830446173902601
-xgboost,State_MISSISSIPPI,0.00026909576263278723
-xgboost,State_CALIFORNIA,0.00026597059331834316
-xgboost,State_SOUTH DAKOTA,0.0002587000490166247
-xgboost,State_MASSACHUSETTS,0.00025373627431690693
-xgboost,State_TEXAS,0.0002528768090996891
-xgboost,State_MONTANA,0.00024784880224615335
-xgboost,State_OHIO,0.0002470810723025352
-xgboost,State_TENNESSEE,0.00024606409715488553
-xgboost,yoy_pct_change,0.00024260417558252811
-xgboost,years_observed_so_far,0.00023407573462463915
-xgboost,State_CONNECTICUT,0.0002328975679120049
-xgboost,State_MARYLAND,0.00023185249301604927
-xgboost,State_HAWAII,0.0002249735698569566
-xgboost,State_KENTUCKY,0.00021985708735883236
-xgboost,State_NORTH DAKOTA,0.00020649685757234693
-xgboost,State_ALASKA,0.00020272810070309788
-xgboost,State_OKLAHOMA,0.00019458826864138246
-xgboost,State_GEORGIA,0.00018331524915993214
-xgboost,State_WEST VIRGINIA,0.00018278788775205612
-xgboost,commodity_Yogurt,0.00018161222396884114
-xgboost,State_NEW MEXICO,0.00018128407828044146
-xgboost,State_NORTH CAROLINA,0.0001791586255421862
-xgboost,State_VIRGINIA,0.00017026663408614695
-xgboost,State_KANSAS,0.0001661758142290637
-xgboost,State_FLORIDA,0.00016001431504264474
-xgboost,State_ARIZONA,0.00015687225095462054
-xgboost,State_IOWA,0.00015224797243718058
-xgboost,State_ARKANSAS,0.00015007799083832651
-xgboost,State_RHODE ISLAND,0.00014867191202938557
-xgboost,State_ALABAMA,0.0001463279186282307
-xgboost,State_UTAH,0.00013798446161672473
-xgboost,State_NEW YORK,0.00013380282325670123
-xgboost,State_PENNSYLVANIA,0.0001309034851146862
-xgboost,State_IDAHO,0.00010658912651706487
-xgboost,State_VERMONT,0.00010335245315218344
-xgboost,State_WISCONSIN,0.00010171713074669242
-xgboost,State_NEBRASKA,8.873327897163108e-05
-xgboost,State_INDIANA,8.831276500131935e-05
-xgboost,State_ILLINOIS,8.756450552027673e-05
-xgboost,State_OREGON,8.010715100681409e-05
-xgboost,State_WASHINGTON,6.24597814748995e-05
-xgboost,State_MISSOURI,6.074299744796008e-05
-xgboost,State_MICHIGAN,5.593497189693153e-05
-xgboost,State_NEW HAMPSHIRE,5.538880577660166e-05
-xgboost,State_MINNESOTA,0.0
-xgboost,commodity_Coffee,0.0
-xgboost,commodity_Milk,0.0
+commodity,model,feature,importance
+Cheese,random_forest,total_production,0.1976132975301676
+Cheese,random_forest,rolling_3_mean,0.14856952765773948
+Cheese,random_forest,rolling_5_mean,0.1391722176920816
+Cheese,random_forest,production_lag_1,0.11379625361263689
+Cheese,random_forest,expanding_mean_to_date,0.08885058946690798
+Cheese,random_forest,state_share_of_commodity,0.07226795514747165
+Cheese,random_forest,production_lag_2,0.07013946326871674
+Cheese,random_forest,production_rank_in_commodity_year,0.05804115458303658
+Cheese,random_forest,production_lag_3,0.051511522280819615
+Cheese,random_forest,years_observed_so_far,0.016840023302673084
+Cheese,random_forest,Year,0.010080754055242112
+Cheese,random_forest,State_MASSACHUSETTS,0.007203244571611039
+Cheese,random_forest,State_WISCONSIN,0.006169074366027938
+Cheese,random_forest,yoy_pct_change,0.005705173091354162
+Cheese,random_forest,State_RHODE ISLAND,0.003047415298137136
+Cheese,random_forest,State_MINNESOTA,0.0015255851708616407
+Cheese,random_forest,State_CALIFORNIA,0.0014069190180706064
+Cheese,random_forest,State_NEW YORK,0.0011099288026588246
+Cheese,random_forest,State_CONNECTICUT,0.0008570296999049729
+Cheese,random_forest,State_MONTANA,0.0005011219764729855
+Cheese,random_forest,State_IOWA,0.0005006996263537568
+Cheese,random_forest,State_VIRGINIA,0.0004839582502525226
+Cheese,random_forest,State_ILLINOIS,0.00042201505287325393
+Cheese,random_forest,State_ALABAMA,0.0003535264318408414
+Cheese,random_forest,State_SOUTH DAKOTA,0.00034885861804346933
+Cheese,random_forest,State_OHIO,0.0003364596960217639
+Cheese,random_forest,State_PENNSYLVANIA,0.00027231327823014264
+Cheese,random_forest,State_NEW JERSEY,0.0002546361904729681
+Cheese,random_forest,State_MISSOURI,0.0002481166138965223
+Cheese,random_forest,State_NEW MEXICO,0.0002210568446351957
+Cheese,random_forest,State_ARKANSAS,0.00020570364796462754
+Cheese,random_forest,State_MISSISSIPPI,0.00020563517465540233
+Cheese,random_forest,State_NORTH DAKOTA,0.0001909793591867614
+Cheese,random_forest,State_TENNESSEE,0.0001881082549338916
+Cheese,random_forest,State_VERMONT,0.0001845980557460832
+Cheese,random_forest,State_IDAHO,0.0001636655226254153
+Cheese,random_forest,State_KANSAS,0.0001559002776171811
+Cheese,random_forest,State_NEBRASKA,0.00015280173388307013
+Cheese,random_forest,State_UTAH,0.000146661194958091
+Cheese,random_forest,State_KENTUCKY,0.00011979121896936446
+Cheese,random_forest,State_OREGON,0.00010124615067752176
+Cheese,random_forest,State_WASHINGTON,7.154039651242909e-05
+Cheese,random_forest,State_INDIANA,6.563981350558196e-05
+Cheese,random_forest,State_COLORADO,5.414315111254477e-05
+Cheese,random_forest,State_TEXAS,5.3172979824579584e-05
+Cheese,random_forest,State_MICHIGAN,3.4699701131295316e-05
+Cheese,random_forest,State_OKLAHOMA,3.443388378159708e-05
+Cheese,random_forest,State_LOUISIANA,2.1388287701554172e-05
+Cheese,random_forest,commodity_Cheese,0.0
+Cheese,xgboost,total_production,0.5649901628494263
+Cheese,xgboost,rolling_3_mean,0.28550973534584045
+Cheese,xgboost,rolling_5_mean,0.058393288403749466
+Cheese,xgboost,state_share_of_commodity,0.01870974525809288
+Cheese,xgboost,State_COLORADO,0.013808922842144966
+Cheese,xgboost,production_rank_in_commodity_year,0.01098212692886591
+Cheese,xgboost,production_lag_1,0.007054141256958246
+Cheese,xgboost,State_CONNECTICUT,0.0034217997454106808
+Cheese,xgboost,production_lag_2,0.0023960534017533064
+Cheese,xgboost,State_IOWA,0.0022339364513754845
+Cheese,xgboost,State_LOUISIANA,0.0019326695473864675
+Cheese,xgboost,years_observed_so_far,0.0018338427180424333
+Cheese,xgboost,State_NEW JERSEY,0.0015585185028612614
+Cheese,xgboost,State_CALIFORNIA,0.001557788928039372
+Cheese,xgboost,State_MASSACHUSETTS,0.0015532515244558454
+Cheese,xgboost,Year,0.0015086987987160683
+Cheese,xgboost,State_TENNESSEE,0.0014558242401108146
+Cheese,xgboost,State_RHODE ISLAND,0.0012339974055066705
+Cheese,xgboost,State_ALABAMA,0.00117186876013875
+Cheese,xgboost,production_lag_3,0.0011320228222757578
+Cheese,xgboost,yoy_pct_change,0.0011246639769524336
+Cheese,xgboost,expanding_mean_to_date,0.001120151486247778
+Cheese,xgboost,State_VERMONT,0.0010375065030530095
+Cheese,xgboost,State_MISSOURI,0.001031768973916769
+Cheese,xgboost,State_OKLAHOMA,0.0010169742163270712
+Cheese,xgboost,State_MONTANA,0.0010031890124082565
+Cheese,xgboost,State_PENNSYLVANIA,0.0009817765094339848
+Cheese,xgboost,State_WASHINGTON,0.000884269189555198
+Cheese,xgboost,State_INDIANA,0.0008325809612870216
+Cheese,xgboost,State_KENTUCKY,0.0008051461190916598
+Cheese,xgboost,State_OREGON,0.0007511401199735701
+Cheese,xgboost,State_VIRGINIA,0.000736379181034863
+Cheese,xgboost,State_KANSAS,0.0007279074052348733
+Cheese,xgboost,State_ARKANSAS,0.0006554810097441077
+Cheese,xgboost,State_TEXAS,0.0006041110027581453
+Cheese,xgboost,State_MINNESOTA,0.0006024585454724729
+Cheese,xgboost,State_NORTH DAKOTA,0.0005658338777720928
+Cheese,xgboost,State_MICHIGAN,0.0005638262373395264
+Cheese,xgboost,State_ILLINOIS,0.000433341134339571
+Cheese,xgboost,State_MISSISSIPPI,0.0004279421700630337
+Cheese,xgboost,State_NEBRASKA,0.00037981171044521034
+Cheese,xgboost,State_UTAH,0.00031586462864652276
+Cheese,xgboost,State_OHIO,0.00028806697810068727
+Cheese,xgboost,State_IDAHO,0.00024060803116299212
+Cheese,xgboost,State_SOUTH DAKOTA,0.00021583965281024575
+Cheese,xgboost,State_NEW YORK,0.00021492571977432817
+Cheese,xgboost,State_NEW MEXICO,0.0
+Cheese,xgboost,State_WISCONSIN,0.0
+Cheese,xgboost,commodity_Cheese,0.0
+Coffee,random_forest,expanding_mean_to_date,0.2962962962962963
+Coffee,random_forest,total_production,0.2222222222222222
+Coffee,random_forest,Year,0.18518518518518517
+Coffee,random_forest,rolling_3_mean,0.18518518518518517
+Coffee,random_forest,rolling_5_mean,0.1111111111111111
+Coffee,random_forest,production_lag_1,0.0
+Coffee,random_forest,production_lag_2,0.0
+Coffee,random_forest,production_lag_3,0.0
+Coffee,random_forest,yoy_pct_change,0.0
+Coffee,random_forest,state_share_of_commodity,0.0
+Coffee,random_forest,production_rank_in_commodity_year,0.0
+Coffee,random_forest,years_observed_so_far,0.0
+Coffee,random_forest,State_HAWAII,0.0
+Coffee,random_forest,commodity_Coffee,0.0
+Coffee,xgboost,total_production,0.5118499994277954
+Coffee,xgboost,Year,0.3411966562271118
+Coffee,xgboost,yoy_pct_change,0.07881252467632294
+Coffee,xgboost,production_lag_2,0.055853720754384995
+Coffee,xgboost,production_lag_1,0.011499444954097271
+Coffee,xgboost,rolling_3_mean,0.0007877156022004783
+Coffee,xgboost,production_lag_3,0.0
+Coffee,xgboost,rolling_5_mean,0.0
+Coffee,xgboost,state_share_of_commodity,0.0
+Coffee,xgboost,production_rank_in_commodity_year,0.0
+Coffee,xgboost,years_observed_so_far,0.0
+Coffee,xgboost,expanding_mean_to_date,0.0
+Coffee,xgboost,State_HAWAII,0.0
+Coffee,xgboost,commodity_Coffee,0.0
+Honey,random_forest,rolling_3_mean,0.15374000070462665
+Honey,random_forest,rolling_5_mean,0.15064699870399864
+Honey,random_forest,total_production,0.12468559271278785
+Honey,random_forest,state_share_of_commodity,0.12253423317432979
+Honey,random_forest,production_rank_in_commodity_year,0.10554576224532516
+Honey,random_forest,expanding_mean_to_date,0.08849376876279878
+Honey,random_forest,production_lag_1,0.07511305771309122
+Honey,random_forest,production_lag_2,0.0704953032897686
+Honey,random_forest,production_lag_3,0.05562790362466475
+Honey,random_forest,State_NORTH DAKOTA,0.006960324872961207
+Honey,random_forest,State_SOUTH DAKOTA,0.005652683210068086
+Honey,random_forest,State_CALIFORNIA,0.004874519310337676
+Honey,random_forest,Year,0.0038025072690635346
+Honey,random_forest,years_observed_so_far,0.003652685198747449
+Honey,random_forest,State_FLORIDA,0.003610476343508814
+Honey,random_forest,State_KENTUCKY,0.003178407132428734
+Honey,random_forest,yoy_pct_change,0.0028658968777822845
+Honey,random_forest,State_DELAWARE,0.0023581671569460057
+Honey,random_forest,State_MINNESOTA,0.0014130810255680508
+Honey,random_forest,State_TEXAS,0.0011267810121291394
+Honey,random_forest,State_MARYLAND,0.0010529037923100468
+Honey,random_forest,State_RHODE ISLAND,0.0010445325808039628
+Honey,random_forest,State_MONTANA,0.0010332967485803418
+Honey,random_forest,State_NEW JERSEY,0.000794114831461955
+Honey,random_forest,State_MAINE,0.0007877325651996867
+Honey,random_forest,State_VIRGINIA,0.0006953373325876233
+Honey,random_forest,State_NEW HAMPSHIRE,0.0006177519033513227
+Honey,random_forest,State_VERMONT,0.0005863681294436105
+Honey,random_forest,State_NEVADA,0.00043263038812981847
+Honey,random_forest,State_MISSISSIPPI,0.0004275964554775065
+Honey,random_forest,State_WEST VIRGINIA,0.00040189785228824103
+Honey,random_forest,State_WYOMING,0.0003438421372060174
+Honey,random_forest,State_TENNESSEE,0.00033080048220771036
+Honey,random_forest,State_UTAH,0.0003298007938925176
+Honey,random_forest,State_COLORADO,0.00032562261448353715
+Honey,random_forest,State_OREGON,0.0003139719483204611
+Honey,random_forest,State_IDAHO,0.0002975013895029687
+Honey,random_forest,State_PENNSYLVANIA,0.00029059563892279314
+Honey,random_forest,State_NORTH CAROLINA,0.0002889815984728061
+Honey,random_forest,State_CONNECTICUT,0.00026839902019666954
+Honey,random_forest,State_IOWA,0.0002658748826382176
+Honey,random_forest,State_SOUTH CAROLINA,0.00025205114910511605
+Honey,random_forest,State_MICHIGAN,0.000223735376627822
+Honey,random_forest,State_OHIO,0.0002216071027805597
+Honey,random_forest,State_HAWAII,0.00020530403789119386
+Honey,random_forest,State_ARIZONA,0.00019636927862613985
+Honey,random_forest,State_INDIANA,0.00018863242470874264
+Honey,random_forest,State_MISSOURI,0.00017182428833425589
+Honey,random_forest,State_ARKANSAS,0.00015172238272565374
+Honey,random_forest,State_ILLINOIS,0.0001496048619385556
+Honey,random_forest,State_NEBRASKA,0.0001442951353210715
+Honey,random_forest,State_WISCONSIN,0.00013297978158406006
+Honey,random_forest,State_WASHINGTON,0.00010311165464608937
+Honey,random_forest,State_KANSAS,9.914766234062177e-05
+Honey,random_forest,State_ALABAMA,8.122068088923053e-05
+Honey,random_forest,State_GEORGIA,7.875870995319959e-05
+Honey,random_forest,State_LOUISIANA,7.045646681367416e-05
+Honey,random_forest,State_NEW YORK,6.817367069874318e-05
+Honey,random_forest,State_NEW MEXICO,5.830115063380869e-05
+Honey,random_forest,State_OKLAHOMA,4.800309397427932e-05
+Honey,random_forest,State_MASSACHUSETTS,4.69976639967849e-05
+Honey,random_forest,commodity_Honey,0.0
+Honey,xgboost,rolling_5_mean,0.32621413469314575
+Honey,xgboost,rolling_3_mean,0.30491766333580017
+Honey,xgboost,total_production,0.15891030430793762
+Honey,xgboost,state_share_of_commodity,0.061664097011089325
+Honey,xgboost,expanding_mean_to_date,0.02416720800101757
+Honey,xgboost,production_rank_in_commodity_year,0.012705186381936073
+Honey,xgboost,State_DELAWARE,0.00993255153298378
+Honey,xgboost,production_lag_1,0.005990523844957352
+Honey,xgboost,State_NEVADA,0.004847563803195953
+Honey,xgboost,State_SOUTH CAROLINA,0.003759778570383787
+Honey,xgboost,State_TENNESSEE,0.003101675072684884
+Honey,xgboost,State_MASSACHUSETTS,0.003028706880286336
+Honey,xgboost,State_NORTH DAKOTA,0.002943777246400714
+Honey,xgboost,State_OHIO,0.002930740360170603
+Honey,xgboost,production_lag_3,0.002800987334921956
+Honey,xgboost,State_NORTH CAROLINA,0.0025212422478944063
+Honey,xgboost,production_lag_2,0.002269768388941884
+Honey,xgboost,State_CONNECTICUT,0.0022543533705174923
+Honey,xgboost,State_VIRGINIA,0.0022443358320742846
+Honey,xgboost,State_KANSAS,0.0022212390322238207
+Honey,xgboost,State_ILLINOIS,0.0022027133964002132
+Honey,xgboost,State_MINNESOTA,0.002145000733435154
+Honey,xgboost,yoy_pct_change,0.00213856203481555
+Honey,xgboost,State_MISSISSIPPI,0.0020339293405413628
+Honey,xgboost,State_KENTUCKY,0.002011865144595504
+Honey,xgboost,State_OKLAHOMA,0.0018861130811274052
+Honey,xgboost,State_NEW MEXICO,0.0018365533323958516
+Honey,xgboost,State_HAWAII,0.001832148409448564
+Honey,xgboost,State_LOUISIANA,0.0018049220088869333
+Honey,xgboost,State_MONTANA,0.00179464858956635
+Honey,xgboost,State_NEBRASKA,0.0017931944457814097
+Honey,xgboost,State_ARKANSAS,0.0017698645824566483
+Honey,xgboost,State_MAINE,0.0017645636107772589
+Honey,xgboost,State_NEW JERSEY,0.0017616086406633258
+Honey,xgboost,years_observed_so_far,0.0017519197426736355
+Honey,xgboost,State_CALIFORNIA,0.0017511214828118682
+Honey,xgboost,State_INDIANA,0.0017050745664164424
+Honey,xgboost,State_VERMONT,0.0016713084187358618
+Honey,xgboost,Year,0.0015834972728043795
+Honey,xgboost,State_ARIZONA,0.001552324160002172
+Honey,xgboost,State_SOUTH DAKOTA,0.001524696359410882
+Honey,xgboost,State_ALABAMA,0.0014752064598724246
+Honey,xgboost,State_UTAH,0.0014610482612624764
+Honey,xgboost,State_NEW HAMPSHIRE,0.001383292255923152
+Honey,xgboost,State_MARYLAND,0.0013719175476580858
+Honey,xgboost,State_WEST VIRGINIA,0.0013694379013031721
+Honey,xgboost,State_COLORADO,0.0013686673482879996
+Honey,xgboost,State_FLORIDA,0.0013680306728929281
+Honey,xgboost,State_WASHINGTON,0.0013535949401557446
+Honey,xgboost,State_IOWA,0.0012919672299176455
+Honey,xgboost,State_IDAHO,0.0012629433767870069
+Honey,xgboost,State_WYOMING,0.001200870145112276
+Honey,xgboost,State_PENNSYLVANIA,0.0011213106336072087
+Honey,xgboost,State_NEW YORK,0.0011044411221519113
+Honey,xgboost,State_GEORGIA,0.0010784390615299344
+Honey,xgboost,State_OREGON,0.0010192228946834803
+Honey,xgboost,State_TEXAS,0.0009499873849563301
+Honey,xgboost,State_WISCONSIN,0.0008992000948637724
+Honey,xgboost,State_MICHIGAN,0.0008421645034104586
+Honey,xgboost,State_RHODE ISLAND,0.00033674947917461395
+Honey,xgboost,State_MISSOURI,0.0
+Honey,xgboost,commodity_Honey,0.0
+Milk,random_forest,total_production,0.16203061871121435
+Milk,random_forest,rolling_3_mean,0.13804701128301794
+Milk,random_forest,rolling_5_mean,0.13501126175010664
+Milk,random_forest,production_lag_1,0.10575532007735415
+Milk,random_forest,state_share_of_commodity,0.10393603438627005
+Milk,random_forest,production_rank_in_commodity_year,0.09678676397402101
+Milk,random_forest,production_lag_2,0.07961854227570711
+Milk,random_forest,production_lag_3,0.07646046866360806
+Milk,random_forest,expanding_mean_to_date,0.048422053486574725
+Milk,random_forest,State_ALASKA,0.01076704204324238
+Milk,random_forest,State_RHODE ISLAND,0.00795144622306859
+Milk,random_forest,State_WISCONSIN,0.007493224404279098
+Milk,random_forest,yoy_pct_change,0.005559083573043662
+Milk,random_forest,Year,0.002940772124377168
+Milk,random_forest,State_CALIFORNIA,0.002831628727829628
+Milk,random_forest,State_WYOMING,0.002085401238635965
+Milk,random_forest,State_NEW YORK,0.002079895038207039
+Milk,random_forest,years_observed_so_far,0.0019344369024390663
+Milk,random_forest,State_MINNESOTA,0.0016427741528272602
+Milk,random_forest,State_HAWAII,0.0014260215463199478
+Milk,random_forest,State_PENNSYLVANIA,0.0010538254855644855
+Milk,random_forest,State_DELAWARE,0.0008409423823025948
+Milk,random_forest,State_MICHIGAN,0.0005287824855174749
+Milk,random_forest,State_NEVADA,0.00042057521035287706
+Milk,random_forest,State_OHIO,0.00033924032527265157
+Milk,random_forest,State_TEXAS,0.00029777315469941385
+Milk,random_forest,State_IOWA,0.00022976591510104254
+Milk,random_forest,State_GEORGIA,0.00022890706390786021
+Milk,random_forest,State_COLORADO,0.00021788247876727447
+Milk,random_forest,State_NEW HAMPSHIRE,0.0002002759808962753
+Milk,random_forest,State_MAINE,0.00019517380314125612
+Milk,random_forest,State_INDIANA,0.00019373353294416305
+Milk,random_forest,State_UTAH,0.00016123056284545422
+Milk,random_forest,State_MISSOURI,0.0001598911220989755
+Milk,random_forest,State_NEW MEXICO,0.000156087666421819
+Milk,random_forest,State_ILLINOIS,0.00015380685254384486
+Milk,random_forest,State_MONTANA,0.00013844994042852058
+Milk,random_forest,State_CONNECTICUT,0.00013567524083867727
+Milk,random_forest,State_SOUTH CAROLINA,0.00012786939361721358
+Milk,random_forest,State_NEW JERSEY,0.00012280498273339055
+Milk,random_forest,State_MARYLAND,0.00010608604705708003
+Milk,random_forest,State_MISSISSIPPI,0.0001038136109924292
+Milk,random_forest,State_WEST VIRGINIA,9.984490178857895e-05
+Milk,random_forest,State_LOUISIANA,9.947174750786791e-05
+Milk,random_forest,State_WASHINGTON,9.718718446788079e-05
+Milk,random_forest,State_OKLAHOMA,9.243146896021256e-05
+Milk,random_forest,State_ARIZONA,8.942507126768146e-05
+Milk,random_forest,State_NEBRASKA,7.756758257524293e-05
+Milk,random_forest,State_IDAHO,6.975663831387906e-05
+Milk,random_forest,State_ARKANSAS,6.502038882314443e-05
+Milk,random_forest,State_NORTH CAROLINA,6.039891815890055e-05
+Milk,random_forest,State_ALABAMA,5.815707539903222e-05
+Milk,random_forest,State_MASSACHUSETTS,4.876192859981872e-05
+Milk,random_forest,State_NORTH DAKOTA,4.873280214023178e-05
+Milk,random_forest,State_OREGON,4.603526412503405e-05
+Milk,random_forest,State_SOUTH DAKOTA,3.927830383890795e-05
+Milk,random_forest,State_FLORIDA,2.696916732108758e-05
+Milk,random_forest,State_KENTUCKY,2.2097515980958974e-05
+Milk,random_forest,State_VIRGINIA,1.8682120359705443e-05
+Milk,random_forest,State_KANSAS,1.761341848790907e-05
+Milk,random_forest,State_TENNESSEE,1.703714600181932e-05
+Milk,random_forest,State_VERMONT,1.3137535693568014e-05
+Milk,random_forest,commodity_Milk,0.0
+Milk,xgboost,rolling_3_mean,0.6483042240142822
+Milk,xgboost,total_production,0.287914514541626
+Milk,xgboost,state_share_of_commodity,0.033788807690143585
+Milk,xgboost,production_lag_1,0.012282907031476498
+Milk,xgboost,rolling_5_mean,0.004434174858033657
+Milk,xgboost,production_rank_in_commodity_year,0.0030543843749910593
+Milk,xgboost,State_ALASKA,0.0026256279088556767
+Milk,xgboost,expanding_mean_to_date,0.002031401265412569
+Milk,xgboost,production_lag_3,0.0016386908246204257
+Milk,xgboost,production_lag_2,0.0008507607271894813
+Milk,xgboost,State_WISCONSIN,0.00036668352549895644
+Milk,xgboost,yoy_pct_change,0.0002556336694397032
+Milk,xgboost,State_CALIFORNIA,0.00016181943647097796
+Milk,xgboost,State_NEW MEXICO,0.00015142087067943066
+Milk,xgboost,Year,0.00013961238437332213
+Milk,xgboost,State_WYOMING,0.0001163712004199624
+Milk,xgboost,years_observed_so_far,0.00011389025894459337
+Milk,xgboost,State_NEVADA,0.00011211002129130065
+Milk,xgboost,State_IDAHO,9.92609275272116e-05
+Milk,xgboost,State_MINNESOTA,9.288955334341154e-05
+Milk,xgboost,State_HAWAII,8.722222992219031e-05
+Milk,xgboost,State_RHODE ISLAND,7.319761061808094e-05
+Milk,xgboost,State_SOUTH DAKOTA,7.069495040923357e-05
+Milk,xgboost,State_NEW JERSEY,6.530312384711578e-05
+Milk,xgboost,State_KANSAS,6.448665226344019e-05
+Milk,xgboost,State_ARKANSAS,6.168641994008794e-05
+Milk,xgboost,State_ALABAMA,5.809442518511787e-05
+Milk,xgboost,State_NORTH DAKOTA,4.676723256125115e-05
+Milk,xgboost,State_OREGON,4.64670556539204e-05
+Milk,xgboost,State_FLORIDA,4.4882541260449216e-05
+Milk,xgboost,State_SOUTH CAROLINA,4.3868723878404126e-05
+Milk,xgboost,State_TEXAS,4.374618220026605e-05
+Milk,xgboost,State_NEW HAMPSHIRE,3.962801565648988e-05
+Milk,xgboost,State_ARIZONA,3.665018448373303e-05
+Milk,xgboost,State_WEST VIRGINIA,3.4751898056128994e-05
+Milk,xgboost,State_MISSOURI,3.457565981079824e-05
+Milk,xgboost,State_LOUISIANA,3.359826223459095e-05
+Milk,xgboost,State_KENTUCKY,3.244567778892815e-05
+Milk,xgboost,State_MISSISSIPPI,3.1950828997651115e-05
+Milk,xgboost,State_MARYLAND,3.1843228498473763e-05
+Milk,xgboost,State_INDIANA,3.13938180624973e-05
+Milk,xgboost,State_COLORADO,2.9886326956329867e-05
+Milk,xgboost,State_NEBRASKA,2.97142869385425e-05
+Milk,xgboost,State_UTAH,2.9554523280239664e-05
+Milk,xgboost,State_WASHINGTON,2.8910937544424087e-05
+Milk,xgboost,State_TENNESSEE,2.889465758926235e-05
+Milk,xgboost,State_GEORGIA,2.8852147806901485e-05
+Milk,xgboost,State_DELAWARE,2.8773931262549013e-05
+Milk,xgboost,State_MONTANA,2.6699472073232755e-05
+Milk,xgboost,State_ILLINOIS,2.5340303182019852e-05
+Milk,xgboost,State_VERMONT,2.4223514628829435e-05
+Milk,xgboost,State_OKLAHOMA,2.3919712475617416e-05
+Milk,xgboost,State_MAINE,2.1428702893899754e-05
+Milk,xgboost,State_MICHIGAN,2.091074566124007e-05
+Milk,xgboost,State_MASSACHUSETTS,2.0127285097260028e-05
+Milk,xgboost,State_IOWA,1.9730086933122948e-05
+Milk,xgboost,State_VIRGINIA,1.872683787951246e-05
+Milk,xgboost,State_OHIO,1.6353553291992284e-05
+Milk,xgboost,State_PENNSYLVANIA,1.529414475953672e-05
+Milk,xgboost,State_NEW YORK,1.416614577465225e-05
+Milk,xgboost,State_CONNECTICUT,0.0
+Milk,xgboost,State_NORTH CAROLINA,0.0
+Milk,xgboost,commodity_Milk,0.0
+Yogurt,random_forest,total_production,0.1837808089891014
+Yogurt,random_forest,rolling_5_mean,0.16543325323068667
+Yogurt,random_forest,state_share_of_commodity,0.1458874753600238
+Yogurt,random_forest,rolling_3_mean,0.1443093544407351
+Yogurt,random_forest,expanding_mean_to_date,0.11597417470758524
+Yogurt,random_forest,State_NORTH DAKOTA,0.05451818637042406
+Yogurt,random_forest,production_lag_1,0.05105124695935003
+Yogurt,random_forest,production_rank_in_commodity_year,0.04581873972826021
+Yogurt,random_forest,production_lag_2,0.03839746070734727
+Yogurt,random_forest,production_lag_3,0.01872723708816467
+Yogurt,random_forest,years_observed_so_far,0.010391967066425627
+Yogurt,random_forest,Year,0.008716872882707852
+Yogurt,random_forest,State_CALIFORNIA,0.005174936496391597
+Yogurt,random_forest,State_NEW YORK,0.0025246502301841714
+Yogurt,random_forest,yoy_pct_change,0.0020389719636849176
+Yogurt,random_forest,State_NORTH CAROLINA,0.001783495175905132
+Yogurt,random_forest,State_PENNSYLVANIA,0.0013094487753767233
+Yogurt,random_forest,State_ILLINOIS,0.0011567849252794844
+Yogurt,random_forest,State_WISCONSIN,0.0009187021159870317
+Yogurt,random_forest,State_TEXAS,0.0005921709832835693
+Yogurt,random_forest,State_TENNESSEE,0.00047407810441165246
+Yogurt,random_forest,State_UTAH,0.0003555431540630896
+Yogurt,random_forest,State_OREGON,0.00029672014027392707
+Yogurt,random_forest,State_COLORADO,0.00028039268910476546
+Yogurt,random_forest,State_IOWA,8.732771524214398e-05
+Yogurt,random_forest,State_FLORIDA,0.0
+Yogurt,random_forest,commodity_Yogurt,0.0
+Yogurt,xgboost,rolling_3_mean,0.39056500792503357
+Yogurt,xgboost,total_production,0.35406598448753357
+Yogurt,xgboost,state_share_of_commodity,0.17426522076129913
+Yogurt,xgboost,rolling_5_mean,0.056293245404958725
+Yogurt,xgboost,State_TEXAS,0.008473058231174946
+Yogurt,xgboost,production_lag_1,0.0026918917428702116
+Yogurt,xgboost,Year,0.001966905314475298
+Yogurt,xgboost,production_lag_3,0.001900352886877954
+Yogurt,xgboost,State_TENNESSEE,0.0017675416311249137
+Yogurt,xgboost,State_WISCONSIN,0.0017281408654525876
+Yogurt,xgboost,expanding_mean_to_date,0.0015359612880274653
+Yogurt,xgboost,production_rank_in_commodity_year,0.0011244332417845726
+Yogurt,xgboost,State_ILLINOIS,0.0008710477268323302
+Yogurt,xgboost,production_lag_2,0.0006354250363074243
+Yogurt,xgboost,yoy_pct_change,0.00043725126306526363
+Yogurt,xgboost,years_observed_so_far,0.0004079828504472971
+Yogurt,xgboost,State_FLORIDA,0.00032781207119114697
+Yogurt,xgboost,State_UTAH,0.0002520424604881555
+Yogurt,xgboost,State_IOWA,0.0002334898163098842
+Yogurt,xgboost,State_NEW YORK,0.00017952854977920651
+Yogurt,xgboost,State_CALIFORNIA,0.0001375408173771575
+Yogurt,xgboost,State_OREGON,6.556459265993908e-05
+Yogurt,xgboost,State_COLORADO,4.350860035629012e-05
+Yogurt,xgboost,State_NORTH CAROLINA,2.0496519937296398e-05
+Yogurt,xgboost,State_PENNSYLVANIA,1.0536616173340008e-05
+Yogurt,xgboost,State_NORTH DAKOTA,0.0
+Yogurt,xgboost,commodity_Yogurt,0.0
