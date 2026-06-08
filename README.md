@@ -1,24 +1,51 @@
-# USDA Commodities SQL Analytics Portfolio
+# USDA Commodity Production Analytics Portfolio
+
+[![CI](https://github.com/vuoanh/data-science-pofolio/actions/workflows/ci.yml/badge.svg)](https://github.com/vuoanh/data-science-pofolio/actions/workflows/ci.yml)
 
 This project analyzes USDA agricultural production data from 1930-2023 using
-SQLite, SQL, Python, and Dash. The goal is to demonstrate end-to-end structured
-data analysis: relational data modeling, data cleaning, SQL querying, trend
-analysis, state-level ranking, and dashboard reporting.
+SQLite, SQL, Python, machine learning, and Dash. The goal is to demonstrate an
+end-to-end analytics workflow: USDA bulk-data ingestion, relational data
+modeling, SQL analysis, forecasting feature engineering, model validation, and
+business-facing dashboard reporting.
 
 ## Dashboard Preview
 
 ![USDA commodity production dashboard preview](dashboard_preview.gif)
 
+## Current Dashboard Workflow
+
+The dashboard is designed as a business review tool for one selected commodity
+at a time, while always showing all available states for that commodity.
+
+1. **Overview**: review production KPIs, year-over-year movement, the current
+   top producing state, model error, production trends, and the filtered record
+   table.
+2. **State Rankings**: compare all states for the selected commodity in the
+   latest selected year, including concentration/share of national production.
+3. **Forecasts**: choose a machine learning model and confidence interval, then
+   review direct next-year forecasts from each state's latest available
+   observation.
+4. **Model Validation**: compare actual vs predicted production, residuals over
+   time, forecast misses, and model accuracy before trusting forward forecasts.
+
+Global filters now focus on the decision flow: light/dark theme, single
+commodity, year range, ML model, and confidence interval. The previous state
+selector was removed so the dashboard consistently presents the full all-state
+market view.
+
 ## How To Review This Project
 
-1. Start with the SQL portfolio files in [`SQL/`](SQL/), especially the quality,
+1. Watch the dashboard preview above to understand the product experience.
+2. Read [`docs/project_summary.md`](docs/project_summary.md) for findings,
+   assumptions, and limitations.
+3. Review the SQL portfolio files in [`SQL/`](SQL/), especially the quality,
    CTE, window function, and ranking modules.
-2. Read [`docs/project_summary.md`](docs/project_summary.md) for findings and
-   limitations.
-3. Check [`docs/schema.md`](docs/schema.md) and
+4. Check [`docs/schema.md`](docs/schema.md) and
    [`docs/data_dictionary.md`](docs/data_dictionary.md) for database context.
-4. Open [`dashboard/app.py`](dashboard/app.py) only after reviewing the SQL that
-   creates the dashboard-ready data.
+5. Review [`docs/forecasting_model_summary.md`](docs/forecasting_model_summary.md)
+   and the model artifacts in [`models/`](models/).
+6. Open [`dashboard/app.py`](dashboard/app.py) to see how the data, forecasts,
+   validation outputs, and business dashboard are connected.
 
 ## Skills Demonstrated
 
@@ -34,7 +61,8 @@ analysis, state-level ranking, and dashboard reporting.
 - Forecasting feature engineering
 - Random Forest and XGBoost model comparison
 - Time-based model validation against simple baselines
-- Python and Dash dashboarding
+- Prediction intervals and direct forward forecasts
+- Business-oriented Dash dashboarding with light/dark themes
 
 ## Business Questions Answered
 
@@ -79,9 +107,20 @@ Modeling artifacts:
 
 - [`src/build_features.py`](src/build_features.py)
 - [`src/train_model.py`](src/train_model.py)
+- [`src/generate_forecasts.py`](src/generate_forecasts.py)
 - [`src/evaluate_model.py`](src/evaluate_model.py)
-- [`notebooks/01_forecasting_model.ipynb`](notebooks/01_forecasting_model.ipynb)
 - [`docs/forecasting_model_summary.md`](docs/forecasting_model_summary.md)
+
+Dashboard-facing outputs:
+
+- `models/test_predictions.csv`: backtest predictions, residuals, and
+  prediction intervals used by the Model Validation tab.
+- `models/latest_forecasts.csv`: latest direct forecasts for each available
+  state/commodity pair used by the Forecasts tab.
+- `models/by_commodity/<commodity>/random_forest.joblib` and
+  `models/by_commodity/<commodity>/xgboost.joblib`: trained
+  commodity-specific pipelines. The dashboard no longer depends on one global
+  Random Forest or XGBoost model file.
 
 Models compared:
 
@@ -159,14 +198,20 @@ data-science-USDA-commodities/
 │       ├── honey/
 │       ├── milk/
 │       └── yogurt/
-├── notebooks/
-│   └── 01_forecasting_model.ipynb
 ├── src/
 │   ├── build_features.py
 │   ├── evaluate_model.py
 │   ├── generate_forecasts.py
 │   ├── refresh_usda_bulk_data.py
 │   └── train_model.py
+├── tests/
+│   ├── conftest.py
+│   ├── test_build_features.py
+│   ├── test_evaluate_model.py
+│   └── test_generate_forecasts.py
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── SQL/
 │   ├── project-USDA.sqlite
 │   ├── 00_schema.sql
@@ -234,6 +279,7 @@ Build forecasting features and train models:
 ```bash
 python src/build_features.py
 python src/train_model.py
+python src/generate_forecasts.py
 ```
 
 ## Running The Dashboard
@@ -253,16 +299,46 @@ python app.py
 
 Open `http://localhost:1234`.
 
+## Testing
+
+The forecasting pipeline is covered by a `pytest` suite that pins the
+contracts most prone to silent breakage:
+
+- **Leakage guard** — every training row's `target_year` must equal `Year + 1`;
+  multi-year gaps are excluded so the model only learns true one-year-ahead
+  forecasts.
+- **Feature correctness** — lag, rolling-mean, and target values are checked
+  against hand-computed series.
+- **Forward features** — exactly one row per state/commodity at its latest year,
+  with no target column leaking in.
+- **Metrics and intervals** — MAE/RMSE/MAPE/R2, residual and tree-quantile
+  prediction intervals, and empirical coverage math.
+- **Recency filter** — states that exited production are dropped from forward
+  forecasts.
+
+Install dev dependencies and run the suite:
+
+```bash
+python -m pip install -r requirements-dev.txt
+pytest
+```
+
+Tests run automatically on every push and pull request via GitHub Actions
+(`.github/workflows/ci.yml`) on Python 3.11 and 3.12.
+
 ## Dashboard Features
 
 - Light and dark theme toggle
-- Commodity multi-select
+- Single-commodity workflow for cleaner model comparison
 - Year range slider
-- State multi-select
-- Production trend line chart
-- Top 10 states bar chart
-- Filtered data table
-- CSV download
+- ML model selector for Random Forest vs XGBoost forecasts
+- Confidence interval selector for 80% vs 95% bands
+- Overview tab with KPI cards, production trend, top states, and data table
+- State Rankings tab for all-state benchmarking and production concentration
+- Forecasts tab with latest direct forecasts and confidence bands
+- Model Validation tab with actual vs predicted production, residuals, and
+  largest forecast misses
+- CSV download for filtered production records
 
 ## Data Pipeline
 
@@ -272,7 +348,10 @@ USDA QuickStats bulk exports
     -> filtered project raw extract
     -> audit-rich processed annual dataset
     -> SQL/USDA_production_2023.csv
-    -> forecasting features, model artifacts, and Dash dashboard
+    -> data/processed/forecasting_features.csv
+    -> commodity-specific Random Forest and XGBoost models
+    -> models/test_predictions.csv and models/latest_forecasts.csv
+    -> Dash dashboard overview, rankings, forecasts, and validation tabs
 ```
 
 ## Known Limitations

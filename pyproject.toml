@@ -1,0 +1,5 @@
+[tool.pytest.ini_options]
+# Tests import the forecasting modules directly from src/ without packaging.
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
