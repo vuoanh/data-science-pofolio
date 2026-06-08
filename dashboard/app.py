@@ -179,6 +179,7 @@ def _theme_values(toggle: bool) -> dict:
             "hover_bg": "#FFFFFF",
             "hover_border": "#C4D2DF",
             "hover_text": "#172033",
+            "forecast_interval_fill": "rgba(15, 118, 110, 0.16)",
         }
     return {
         "template": template_theme2,
@@ -189,6 +190,7 @@ def _theme_values(toggle: bool) -> dict:
         "hover_bg": "#1D2A40",
         "hover_border": "#475569",
         "hover_text": "#F8FAFC",
+        "forecast_interval_fill": "rgba(94, 234, 212, 0.12)",
     }
 
 
@@ -1068,6 +1070,7 @@ def download_csv(_n_clicks, year_range, selected_commodity):
     Input(ThemeSwitchAIO.ids.switch("theme"), "value"),
 )
 def update_forecasts(selected_model, selected_commodity, year_range, interval, toggle):
+    theme = _theme_values(toggle)
     lower_col = f"pi_{interval}_lower"
     upper_col = f"pi_{interval}_upper"
     empty_chart = _empty_figure("No forward forecasts for the selected filters", toggle)
@@ -1155,7 +1158,7 @@ def update_forecasts(selected_model, selected_commodity, year_range, interval, t
             y=band_lower,
             mode="lines",
             fill="tonexty",
-            fillcolor="rgba(15, 118, 110, 0.16)",
+            fillcolor=theme["forecast_interval_fill"],
             line={"width": 0},
             name=f"{interval}% interval",
             hoverinfo="skip",
