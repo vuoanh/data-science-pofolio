@@ -1,0 +1,7 @@
+services:
+  - type: web
+    runtime: python
+    name: usda-commodity-dashboard
+    plan: free
+    buildCommand: "pip install -r requirements-render.txt"
+    startCommand: "gunicorn dashboard.app:server --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120"

@@ -126,6 +126,7 @@ load_figure_template([template_theme1, template_theme2])
 
 app = Dash(__name__, external_stylesheets=[url_theme1, url_theme2])
 app.title = "USDA Commodity Production"
+server = app.server
 
 # ---------------------------------------------------------------------------
 # Helpers
