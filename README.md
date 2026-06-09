@@ -6,6 +6,8 @@ End-to-end data science project turning USDA QuickStats production data
 from 1930-2023 into SQL analysis, machine-learning forecasts, and a
 business-facing Dash dashboard.
 
+**Live dashboard:** [usda-commodity-dashboard.onrender.com](https://usda-commodity-dashboard.onrender.com)
+
 ![USDA commodity production dashboard preview](dashboard_preview.gif)
 
 ## Overview

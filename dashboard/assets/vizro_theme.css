@@ -278,6 +278,47 @@ body {
   background: var(--viz-accent-soft);
 }
 
+.dashboard-shell.theme-dark .rc-slider-mark-text,
+.dashboard-shell.theme-dark .rc-slider-tooltip-inner {
+  color: var(--viz-text) !important;
+}
+
+.dashboard-shell.theme-dark .rc-slider-tooltip-inner {
+  background: var(--viz-surface-soft) !important;
+  border: 1px solid var(--viz-border-strong) !important;
+  box-shadow: var(--viz-shadow);
+}
+
+.dashboard-shell.theme-dark .Select-control,
+.dashboard-shell.theme-dark .Select-menu-outer,
+.dashboard-shell.theme-dark .Select-value,
+.dashboard-shell.theme-dark .Select-placeholder,
+.dashboard-shell.theme-dark .Select-input {
+  background: var(--viz-surface-soft) !important;
+  border-color: var(--viz-border-strong) !important;
+  color: var(--viz-text) !important;
+}
+
+.dashboard-shell.theme-dark .Select-value-label,
+.dashboard-shell.theme-dark .Select-input,
+.dashboard-shell.theme-dark .Select-input > input,
+.dashboard-shell.theme-dark .Select-option {
+  color: var(--viz-text) !important;
+}
+
+.dashboard-shell.theme-dark .Select-option {
+  background: var(--viz-surface-soft) !important;
+}
+
+.dashboard-shell.theme-dark .Select-option.is-focused,
+.dashboard-shell.theme-dark .Select-option:hover {
+  background: var(--viz-accent-soft) !important;
+}
+
+.dashboard-shell.theme-dark .Select-arrow {
+  border-color: var(--viz-muted) transparent transparent !important;
+}
+
 .interval-radio {
   display: flex;
   gap: 10px;
